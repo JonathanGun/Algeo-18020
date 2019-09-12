@@ -5,6 +5,12 @@ Anggota Kelompok:
 - Jonathan Yudi Gunawan - 13518084
 - Felicia Gojali - 13518101
 
+## Struktur Folder
+Folder bin berisi java byte code (.class)
+Folder src berisi source code dari program java
+Folder test berisi data uji.
+Folder doc berisi dokumentasi program dan readme
+
 ## Spesifikasi Tugas
 Buatlah program dalam Bahasa Java untuk
 1. Menghitung solusi SPL dengan metode eliminasi metode eliminasi Gauss, metode Eliminasi Gauss-Jordan, metode matriks balikan, dan kaidah Cramer (kaidah Cramer khusus untuk SPL dengan n pebuah dan n persamaan).
