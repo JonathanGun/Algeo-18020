@@ -7,5 +7,7 @@ public class Main {
         Matrix m = new Matrix();
         m.inputMatrix();
         m.print();
+        m.gaussElim();
+        m.print();
     }
 }
