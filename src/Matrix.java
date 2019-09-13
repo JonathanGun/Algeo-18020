@@ -70,7 +70,7 @@ public class Matrix{
         }
     }
 
-    // GAUSS-JORDAN
+    // Elementary Row Operation
     // Swap Row
     private void swapRow(int r1, int r2){
         for(int c = 1; c <= this.cols; c++){
@@ -80,36 +80,70 @@ public class Matrix{
         }
     }
 
-    // Gauss (progress: segitiga atas)
+    // Scale Row
+    private void scaleRow(int r, double k){
+        for (int c = r; c <= this.cols; c++){
+            this.TabInt[r][c] *= k;    
+        }
+    }
+
+    // GAUSS-JORDAN
+    // Gauss
     public void gaussElim(){
-        int r = 2;
-        for(int c = 1; this.rows+c <= this.cols; c++){
-            while(r <= this.rows && this.TabInt[1][c] == 0){
-                swapRow(1, r);
-                r++;
-            }
-        }
-        if (r == this.rows){
-            System.out.printf("Solusi tidak ada");
-        }
+        // int r = 2;
+        // Cek ada solusi/tidak/banyak
+        // for(int c = 1; this.rows+c <= this.cols; c++){
+        //     while(r <= this.rows && this.TabInt[1][c] == 0){
+        //         swapRow(1, r);
+        //         r++;
+        //     }
+        // }
+        // if (r == this.rows){
+        //     System.out.printf("Solusi tidak ada");
+        // }
         
+        // Kasus normal (ada 1 solusi) : ukuran matriks NxN
         for (int pivot = 1; pivot <= this.rows; pivot++){
-            r = pivot;
-            System.out.print(pivot);
-            System.out.printf("\n");
-            for(r = pivot+1; r <= this.rows; r++){
+            for(int r = pivot+1; r <= this.rows; r++){
                 double k = this.TabInt[r][pivot]/this.TabInt[pivot][pivot];
                 for (int c = pivot; c <= this.cols; c++){
                     this.TabInt[r][c] -= k*this.TabInt[pivot][c];
                 }
             }
-            print();
-            System.out.printf("\n");
+        }
+
+        for (int r = 1; r <= this.rows; r++){
+            double k = this.TabInt[r][r];
+            scaleRow(r, 1/k);
         }
     }
 
     // Jordan
+    private void jordanElim(){
+        for (int pivot = this.rows; pivot >= 1; pivot--){
+            for(int r = pivot-1; r >= 1; r--){
+                double k = this.TabInt[r][pivot]/this.TabInt[pivot][pivot];
+                for (int c = this.cols; c > r; c--){
+                    this.TabInt[r][c] -= k*this.TabInt[pivot][c];
+                }
+            }
+        }
+    }
 
     // Gauss Jordan
+    public void gaussJordanElim(){
+        gaussElim();
+        jordanElim();
+    }
+
+    // Invers
+
+    // Determinan
+
+    // Cofactor
+
+    // Adjoin
+
+    // Interpolasi Polinom
 
 }
