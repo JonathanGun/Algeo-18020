@@ -1,15 +1,11 @@
 import java.util.Scanner;
+import java.io.File;
+import java.io.FileNotFoundException;
 
 public class Main {
-    private static Scanner input = new Scanner(System.in);
-
     public static void main(String[] args){
-        System.out.printf("Masukkan jumlah baris: ");
-        int r = input.nextInt();
-        System.out.printf("Masukkan jumlah kolom: ");
-        int c = input.nextInt();
-        Matrix m = new Matrix(r, c);
-        m.input();
+        Matrix m = new Matrix();
+        m.inputMatrix();
         m.print();
     }
 }
