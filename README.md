@@ -6,10 +6,27 @@ Anggota Kelompok:
 - Felicia Gojali - 13518101
 
 ## Struktur Folder
-Folder bin berisi java byte code (.class)
-Folder src berisi source code dari program java
-Folder test berisi data uji.
-Folder doc berisi dokumentasi program dan readme
+```
+root
+ ├─ bin
+ |   ├─ Main.class
+ |   ├─ Matrix.class
+ |   ├─ MatrixSPL.class
+ |   └─ MatrixSquare.class
+ ├─ src
+ |   ├─ Main.java
+ |   ├─ Matrix.java
+ |   ├─ MatrixSPL.java
+ |   └─ MatrixSquare.java
+ ├─ test
+ |   ├─ spl1.txt
+ |   ├─ spl1_sol.txt
+ |   ├─ sqmat1.txt
+ |   └─ sqmat1_sol.txt
+ └─ doc
+     ├─ laporan.docx
+     └─ README.md
+```
 
 ## Spesifikasi Tugas
 Buatlah program dalam Bahasa Java untuk
