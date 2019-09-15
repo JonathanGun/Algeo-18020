@@ -28,6 +28,66 @@ root
      └─ README.md
 ```
 
+## Requirements
+1. [Java SDK 12](https://www.oracle.com/technetwork/java/javase/downloads/jdk12-downloads-5295953.html)
+
+## Progress Tracker
+### Main.java
+  - [ ] Daftar Menu
+  - [ ] getSPLMethod()
+  - [ ] getDetMethod()
+  
+ ### Matrix.java
+  - [x] Constructor
+  - [x] Selector
+  - [x] Setter
+  - [x] I/O
+  - [x] Elementary Row Operation
+  
+ ### MatrixSPL.java
+  - [x] Gauss
+  - [x] Gauss-Jordan
+  - [ ] Metode Invers
+  - [ ] Kaidah Cramer
+  - [ ] Solusi Tunggal
+  - [ ] Tidak ada solusi
+  - [ ] Solusi banyak (bentuk parametrik)
+  
+ ### MatrixSquare.java
+  - [x] Determinan(Cramer)
+  - [x] Determinan(REF)
+  - [ ] Determinan(...)
+  - [ ] Invers(Adjoin)
+  - [ ] Invers(...)
+  - [ ] Cofactor
+  - [ ] Adjoin
+  
+ ### Interpolasi.java
+  - [ ] ?
+  
+ ### File Testing + Kunci
+  - [ ] SPL solusi tunggal (1/10)
+  - [ ] SPL solusi banyak (0/10)
+  - [ ] SPL tanpa solusi (0/10)
+  - [ ] Determinan (0/10)
+  - [ ] Matriks invers (0/10)
+  - [ ] Adjoin (0/10)
+  - [ ] Interpolasi (0/10)
+  
+ ### [Laporan](https://docs.google.com/document/d/1cTYE0Pc5u0voAtmANKqlEoI5vR4JmfMVTUiB3ySZthE/edit?usp=sharing)
+  - [ ] Cover
+  - [ ] Bab 1 : deskripsi masalah
+  - [ ] Bab 2: Teori singkat mengenai metode eliminasi Gauss, metode eliminasi Gauss-Jordan, deteminan, matriks balikan, matriks kofaktor, matriks adjoin, kaidah Cramer, interpolasi polinom.
+  - [ ] Bab 3: Implementasi program dalam Java, meliputi struktur class yang didefinisikan (atribut dan method), garis besar program, dll.
+  - [ ] Bab 4: Eksperimen. Bab ini beris hasil eksekusi program terhadap contoh-contoh kasus yang diberikan berikut analisis hasil eksekusi tersebut
+  - [ ] Bab 5: Kesimpulan, saran, dan refleksi (hasil yang dicapai, saran pengembangan, dan refleksi anda terhadap tugas ini).
+  - [ ] Referensi (buku, web), yang dipakai/diacu di dalam Daftar Referensi.
+ 
+ ### Lainnya
+  - [x] Input from file
+  - [ ] Output to file
+  - [ ] GUI (opsional)
+
 ## Spesifikasi Tugas
 Buatlah program dalam Bahasa Java untuk
 1. Menghitung solusi SPL dengan metode eliminasi metode eliminasi Gauss, metode Eliminasi Gauss-Jordan, metode matriks balikan, dan kaidah Cramer (kaidah Cramer khusus untuk SPL dengan n pebuah dan n persamaan).
@@ -66,7 +126,7 @@ enghitung determinan dan matriks balikan, masukan dari keyboard adalah n dan koe
 9. Program dapat dibuat dengan pilihan menu. Urutan menu dan isinya dipersilakan ditrancang masing-masing. Misalnya, menu:
 ```
 MENU
-1. Sistem Persamaaan Linie r
+1. Sistem Persamaaan Linier
 2. Determinan
 3. Matriks balikan
 4. Matriks kofaktor
