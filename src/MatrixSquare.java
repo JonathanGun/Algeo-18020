@@ -48,12 +48,18 @@ public class MatrixSquare extends MatrixSPL{
     // Gauss - EF
     public double detGauss(MatrixSquare m){
         m.gaussElim();
+        for(int r = 1; r <= this.rows; r++){
+            if (this.TabInt[r][r] == 0) return 0;
+        }
         return m.scalar;
     }
 
     // Gauss Jordan - REF
     public double detGaussJordan(MatrixSquare m){
         m.gaussJordanElim();
+        for(int r = 1; r <= this.rows; r++){
+            if (this.TabInt[r][r] == 0) return 0;
+        }
         return m.scalar;
     }
 
