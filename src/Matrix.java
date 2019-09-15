@@ -9,6 +9,8 @@ public class Matrix{
 
     // Constructor
     public Matrix(){
+        this.rows = 0;
+        this.cols = 0;
         this.scalar = 1;
     }
 
@@ -35,9 +37,7 @@ public class Matrix{
         }
     }
 
-    public void inputMatrix(){
-        Scanner input = new Scanner(System.in);
-
+    public void inputMatrix(Scanner input){
         System.out.printf("Input from file/keyboard? (0/1)");
         int useKeyboard = input.nextInt();
         
@@ -63,11 +63,13 @@ public class Matrix{
     }
 
     public void print(){
+        if (this.rows == 0) System.out.println("Matriks kosong!");
         for(int r = 1; r <= this.rows; r++) {
+            System.out.printf("|");
             for(int c = 1; c <= this.cols; c++) {
                 System.out.printf("%.2f ", getElmt(r, c));
             }
-            System.out.println("");
+            System.out.println("|");
         }
     }
 
@@ -90,6 +92,13 @@ public class Matrix{
         }
     }
 
+    // Add Row
+    protected void addRow(int r1, int r2, double k){
+        for(int c = 1; c <= this.cols; c++){
+            this.TabInt[r1][c] += k*this.TabInt[r2][c];
+        }
+    }
+
     // Operasi Lain
     public boolean isSquareMatrix(){
         return (this.rows+1 == this.cols);
@@ -99,8 +108,8 @@ public class Matrix{
         this.cols--;
     }
 
-    public Matrix copyMatrix(Matrix m){
-        Matrix newm = new Matrix();
+    public void copyMatrix(Matrix m, Matrix newm){
+        newm = new Matrix();
         newm.rows = m.rows;
         newm.cols = m.cols;
         newm.makeEmpty();
@@ -109,6 +118,41 @@ public class Matrix{
                 newm.TabInt[r][c] = m.TabInt[r][c];
             }
         }
-        return newm;
+    }
+
+    protected void reduce(Matrix m, int rx, int cx){
+        Matrix newm = new Matrix();
+        copyMatrix(m, newm);
+        for(int r = 1; r <= m.rows; r++){
+            for(int c = 1; c <= m.cols; c++){
+                int newr = r, newc = c;
+                if (r > rx) newr--;
+                if (c > cx) newc--;
+                newm.TabInt[newr][newc] = m.TabInt[r][c];
+            }
+        }
+        newm.cols--;
+        newm.rows--;
+        copyMatrix(newm, m);
+    }
+
+    protected void transpose(){
+        Matrix newm = new Matrix();
+        newm.rows = this.cols;
+        newm.cols = this.rows;
+        newm.makeEmpty();
+        for(int r = 1; r <= newm.rows; r++){
+            for(int c = 1; c <= newm.cols; c++){
+                newm.TabInt[r][c] = this.TabInt[c][r];
+            }
+        }
+        copyMatrix(newm, this);
+    }
+
+    protected boolean isAllZero(int r){
+        for(int c = 1; c <= this.cols; c++){
+            if (this.TabInt[r][c] != 0) return false;
+        }
+        return true;
     }
 }

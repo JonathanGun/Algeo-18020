@@ -3,9 +3,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 public class MatrixSquare extends MatrixSPL{
-	public void inputMatrix(){
-        Scanner input = new Scanner(System.in);
-
+	public void inputMatrix(Scanner input){
         System.out.printf("Input from file/keyboard? (0/1)");
         int useKeyboard = input.nextInt();
         
@@ -32,20 +30,6 @@ public class MatrixSquare extends MatrixSPL{
 
     // DETERMINAN
     // Cramer
-    private MatrixSquare reduce(MatrixSquare m, int rx, int cx){
-        MatrixSquare newm = copyMatrix(m);
-        for(int r = 1; r <= m.rows; r++){
-            for(int c = 1; c <= m.cols; c++){
-                int newr = r, newc = c;
-                if (r > rx) newr--;
-                if (c > cx) newc--;
-                newm.TabInt[newr][newc] = m.TabInt[r][c];
-            }
-        }
-        newm.cols--;
-        newm.rows--;
-        return newm;
-    }
     public double detCram(MatrixSquare m){
         // Basis
         if (m.rows == 1) return m.TabInt[1][1];
@@ -53,31 +37,37 @@ public class MatrixSquare extends MatrixSPL{
         // Rekursi
         double ans = 0;
         for(int c = 1; c <= m.cols; c++){
-            ans += m.TabInt[1][c]*detCram(reduce(m, 1, c))*Math.pow(-1,c+1);
+            MatrixSquare tmp = new MatrixSquare();
+            copyMatrix(m, tmp);
+            reduce(tmp,1,c);
+            ans += m.TabInt[1][c]*detCram(tmp)*Math.pow(-1,c+1);
         }
         return ans;
     }
 
-    // REF
-    public double detREF(MatrixSquare m){
+    // Gauss - EF
+    public double detGauss(MatrixSquare m){
+        m.gaussElim();
+        return m.scalar;
+    }
+
+    // Gauss Jordan - REF
+    public double detGaussJordan(MatrixSquare m){
         m.gaussJordanElim();
         return m.scalar;
     }
-    // Cofactor
 
-    // Adjoin
+    // COFACTOR
+    public MatrixSquare cofactor(MatrixSquare m){
+        return m; // tmp
+    }
+
+    // ADJOIN (Cofactor transpose)
+    public MatrixSquare adjoin(MatrixSquare m){
+        m = cofactor(m);
+        m.transpose();
+        return m;// tmp
+    }
 
     // Operasi Lain
-    public MatrixSquare copyMatrix(MatrixSquare m){
-        MatrixSquare newm = new MatrixSquare();
-        newm.rows = m.rows;
-        newm.cols = m.cols;
-        newm.makeEmpty();
-        for(int r = 1; r <= m.rows; r++){
-            for(int c = 1; c <= m.cols; c++){
-                newm.TabInt[r][c] = m.TabInt[r][c];
-            }
-        }
-        return newm;
-    }
 }

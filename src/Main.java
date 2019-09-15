@@ -3,10 +3,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 public class Main {
+    static Scanner input = new Scanner(System.in);
     private static int getMenu(){
-        // tampilkan menu 1..7
+        System.out.println("Menu");
         // MENU
-        // 1. Sistem Persamaaan Linie r
+        // 0. Lihat matriks tersimpan
+        // 1. Sistem Persamaaan Linier
         // 2. Determinan
         // 3. Matriks balikan
         // 4. Matriks kofaktor
@@ -14,40 +16,62 @@ public class Main {
         // 6. Interpolasi Polinom
         // 7. Keluar
         // return inputan user
-        return 2; // sementara
+
+        int choice;
+        do{
+            choice = input.nextInt();
+            if ((choice < 0) || (choice > 7))
+                System.out.println("input tidak valid. silakan ulangi");
+        } while ((choice < 0) || (choice > 7));
+        return choice;
     }
 
     private static int getSPLMethod(){
+        System.out.println("Menu Metode SPL");
         // tampilkan menu metode 1..4
         // 1. Metode elim inasi Gauss
         // 2. Metode eliminasi Gauss -Jordan
         // 3. Metode matriks balikan
         // 4. Kaidah Cramer
         // return inputan user
-        return 2; // sementara
+        int choice;
+        do{
+            choice = input.nextInt();
+            if ((choice < 1) || (choice > 4))
+                System.out.println("input tidak valid. silakan ulangi");
+        } while ((choice < 1) || (choice > 4));
+        return choice;
     }
 
     private static int getDetMethod(){
+        System.out.println("Menu Metode Determinan");
         // tampilkan menu metode 1..4
         // 1. Metode elim inasi Gauss
         // 2. Metode eliminasi Gauss -Jordan
         // 3. Metode matriks balikan
         // 4. Kaidah Cramer
         // return inputan user
-        return 1; // sementara
+        int choice;
+        do{
+            choice = input.nextInt();
+            if ((choice < 1) || (choice > 4))
+                System.out.println("input tidak valid. silakan ulangi");
+        } while ((choice < 1) || (choice > 4));
+        return choice;
     }
 
     public static void main(String[] args){
         Matrix m = new Matrix();
         MatrixSPL mspl = new MatrixSPL();
         MatrixSquare msq = new MatrixSquare();
-        
+
         int choice = getMenu();
         while (choice != 7){
+            if (choice == 0){
+                m.print();
             // Sistem Persamaan Linier
-            if (choice == 1){
-                mspl.inputMatrix();
-                mspl.print();
+            } else if (choice == 1){
+                mspl.inputMatrix(input);
                 int splchoice = getSPLMethod();
                 if (splchoice == 1){
                     System.out.println("Menggunakan metode eliminasi gauss:");
@@ -63,21 +87,22 @@ public class Main {
                 mspl.print();
 
             } else if (choice == 2){
-                msq.inputMatrix();
-                msq.print();
+                msq.inputMatrix(input);
                 msq.convertToCoeff();
                 int detchoice = getDetMethod();
                 if (detchoice == 1){
-                    System.out.println("Menggunakan metode cramer:");
-                    System.out.println(msq.detCram(msq));
+                    System.out.println("Menggunakan metode eliminasi gauss (EF):");
+                    System.out.println(msq.detGauss(msq));
                 } else if (detchoice == 2){
                     System.out.println("Menggunakan metode eliminasi gauss-jordan (REF):");
-                    System.out.println(msq.detREF(msq));
+                    System.out.println(msq.detGaussJordan(msq));
                 } else if (detchoice == 3){
 
                 } else if (detchoice == 4){
-
+                    System.out.println("Menggunakan metode cramer:");
+                    System.out.println(msq.detCram(msq));
                 }
+                msq.print();
                 
             } else if (choice == 3){
                 
@@ -90,7 +115,6 @@ public class Main {
             }
 
             choice = getMenu();
-            choice = 7; // sementara
         }
     }
 }
