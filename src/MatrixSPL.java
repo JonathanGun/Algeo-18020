@@ -52,6 +52,7 @@ public class MatrixSPL extends Matrix{
         jordanElim();
     }
 
+
     // Interpolasi
     public void inputInterpolation(Scanner input){
         this.rows = input.nextInt();
@@ -66,6 +67,30 @@ public class MatrixSPL extends Matrix{
                 else this.setElmt(r, c, y);
             }
         }
+    }
+
+    // Invers
+    public Matrix inversSPL (Matrix m) {
+        Matrix newx = new Matrix();
+        MatrixSquare newm = new MatrixSquare();
+        Matrix answ = new Matrix();
+        newx.makeEmpty();
+        answ.makeEmpty();
+        newm.makeEmpty();
+        copyMatrix(m, newm);
+        newm.convertToCoeff();
+        newx.rows = m.rows;
+        newx.cols = 1;
+        for(int r = 1; r <= m.rows; r++){
+            int c = 1;
+            double b = m.getElmt(r,m.cols);
+            newx.setElmt(r,c,b);
+        }
+        newm = newm.invCram(newm);
+        answ.rows = m.rows;
+        answ.cols = 1;
+        answ = kaliMatrix(newm.convertToMatrix(), newx);
+        return answ;
     }
 
     // Operasi lain
