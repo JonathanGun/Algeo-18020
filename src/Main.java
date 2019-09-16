@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 
 public class Main {
     static Scanner input = new Scanner(System.in);
+
     private static int getMenu(){
         System.out.println("Menu");
         System.out.println("0. Lihat matriks tersimpan");
@@ -71,77 +72,74 @@ public class Main {
     }
 
     public static void main(String[] args){
-        Matrix m = new Matrix();
-        MatrixSPL mspl = new MatrixSPL();
-        MatrixSquare msq = new MatrixSquare();
+        Matrix m = new Matrix(0, 0);
 
         int choice = getMenu();
         while (choice != 7){
             if (choice == 0){
                 m.print();
+
             // Sistem Persamaan Linier
             } else if (choice == 1){
-                mspl.inputMatrix(input);
+                m.inputMatrix(input, false);
                 int splchoice = getSPLMethod();
                 if (splchoice == 1){
                     System.out.println("Menggunakan metode eliminasi Gauss (EF):");
-                    mspl.gaussElim();
+                    m.splGauss();
                 } else if (splchoice == 2){
                     System.out.println("Menggunakan metode eliminasi Gauss-Jordan (REF):");
-                    mspl.gaussJordanElim();
+                    m.splGaussJordan();
                 } else if (splchoice == 3){
-
+                    System.out.println("Menggunakan metode Matriks Balikan (invers):");
+                    m.splInv();
                 } else if (splchoice == 4){
-
+                    System.out.println("Menggunakan metode Kaidah Cramer (determinan):");
+                    m.splCram();
                 }
-                mspl.print();
 
+            // Determinan
             } else if (choice == 2){
-                msq.inputMatrix(input);
-                msq.convertToCoeff();
+                m.inputMatrix(input, true);
                 int detchoice = getDetMethod();
                 if (detchoice == 1){
                     System.out.println("Menggunakan metode eliminasi Gauss (EF):");
-                    System.out.println(msq.detGauss(msq));
+                    System.out.println(m.detGauss());
                 } else if (detchoice == 2){
                     System.out.println("Menggunakan metode eliminasi Gauss-Jordan (REF):");
-                    System.out.println(msq.detGaussJordan(msq));
+                    System.out.println(m.detGaussJordan());
                 } else if (detchoice == 3){
                     System.out.println("Menggunakan Metode Cramer:");
-                    System.out.println(msq.detCram(msq));
+                    System.out.println(m.detCram());
                 }
-                msq.print();
-                
+            
+            // Invers
             } else if (choice == 3){
-                msq.inputMatrix(input);
-                msq.convertToCoeff();
+                m.inputMatrix(input, true);
                 int invchoice = getInvMethod();
                 if(invchoice == 1) {
                     System.out.println("Menggunakan metode eliminasi Gauss-Jordan (REF):");
-                    msq = msq.invGaussJordan(msq);
+                    m.invGaussJordan().print();
                 } else if(invchoice == 2) {
                     System.out.println("Menggunakan Metode Crammer");
-                    msq = msq.invCram((msq));
+                    m.invCram().print();
                 }
-                msq.print();
-                
+            
+            // Cofactor
             } else if (choice == 4){
-                msq.inputMatrix(input);
-                msq.convertToCoeff();
-                msq = msq.cofactor(msq);
-                msq.print();
-                
+                m.inputMatrix(input, true);
+                m.cofactor().print();
+            
+            // Adjoin
             } else if (choice == 5){
-                msq = msq.adjoin(msq);
-                
+                m.adjoin().print();
+            
+            // Interpolation
             } else if (choice == 6){
-                mspl.inputInterpolation(input);
-                mspl.gaussJordanElim();
-                mspl.getSolution();
-                mspl.printSolution();
-                mspl.print();
+                m.inputInterpolation(input);
+                m.interpolate();
             }
 
+            System.out.println();
             choice = getMenu();
         }
     }

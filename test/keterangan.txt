@@ -1,0 +1,8 @@
+keterangan testcase:
+spl:
+1. normal
+
+square:
+1. ada swaprow
+2. ada row 0 di tengah
+3. detr = 0
