@@ -52,6 +52,22 @@ public class MatrixSPL extends Matrix{
         jordanElim();
     }
 
+    // Interpolasi
+    public void inputInterpolation(Scanner input){
+        this.rows = input.nextInt();
+        this.cols = this.rows+1;
+        this.makeEmpty();
+        for(int r = 1; r <= this.rows; r++){
+            double x, y;
+            x = input.nextDouble();
+            y = input.nextDouble();
+            for(int c = 1; c <= this.cols; c++){
+                if (c != this.cols) this.setElmt(r, c, Math.pow(x, c-1));
+                else this.setElmt(r, c, y);
+            }
+        }
+    }
+
     // Operasi lain
     public void getSolution(){
     	for(int r = 1; r <= this.rows; r++){
@@ -64,5 +80,12 @@ public class MatrixSPL extends Matrix{
     	for(int r = 1; r <= this.rows; r++){
     		this.Solution[r] = this.TabInt[r][this.cols];
     	}
+    }
+
+    public void printSolution(){
+        System.out.println("Solusi dari matriks SPL:");
+        for(int r = 1; r <= this.rows; r++){
+            System.out.printf("X%d = %f\n", r, this.Solution[r]);
+        }
     }
 }
