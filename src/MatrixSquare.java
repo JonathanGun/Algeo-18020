@@ -68,7 +68,24 @@ public class MatrixSquare extends MatrixSPL{
 
     // COFACTOR
     public MatrixSquare cofactor(MatrixSquare m){
-        return m; // tmp
+        MatrixSquare newm = new MatrixSquare();
+        MatrixSquare answ = new MatrixSquare();
+        newm.makeEmpty();
+        answ.rows = m.rows;
+        answ.cols = m.cols;
+        answ.makeEmpty();
+        for(int r = 1; r <= m.rows; r++){
+            for(int c = 1; c <= m.cols; c++){
+                copyMatrix(m, newm);
+                newm.reduce(newm,r,c);
+                double det = newm.detGauss(newm);
+                answ.setElmt(r,c,det);
+
+
+            }
+        }
+
+        return answ; // tmp
     }
 
     // ADJOIN (Cofactor transpose)
