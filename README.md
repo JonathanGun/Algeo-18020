@@ -11,18 +11,14 @@ root
  ├─ bin
  |   ├─ Main.class
  |   ├─ Matrix.class
- |   ├─ MatrixSPL.class
- |   └─ MatrixSquare.class
  ├─ src
  |   ├─ Main.java
  |   ├─ Matrix.java
- |   ├─ MatrixSPL.java
- |   └─ MatrixSquare.java
  ├─ test
  |   ├─ spl1.txt
  |   ├─ spl1_sol.txt
- |   ├─ sqmat1.txt
- |   └─ sqmat1_sol.txt
+ |   ├─ sq1.txt
+ |   └─ sq1_sol.txt
  └─ doc
      ├─ laporan.docx
      └─ README.md
@@ -48,7 +44,7 @@ root
  ### MatrixSPL.java
   - [x] Gauss
   - [x] Gauss-Jordan
-  - [ ] Metode Invers
+  - [x] Metode Invers
   - [ ] Kaidah Cramer
   - [x] Solusi Tunggal
   - [ ] Tidak ada solusi
@@ -60,16 +56,16 @@ root
   - [x] Determinan(GaussJordan/REF)
   - [x] Determinan(Gauss)
   - [x] Invers(Adjoin/Cramer)
-  - [ ] Invers(GaussJordan/OBE)
-  - [ ] Cofactor
-  - [ ] Adjoin
+  - [x] Invers(GaussJordan/OBE)
+  - [x] Cofactor
+  - [x] Adjoin
   
  ### File Testing + Kunci
   - [ ] SPL solusi tunggal (1/10)
   - [ ] SPL solusi banyak (0/10)
   - [ ] SPL tanpa solusi (0/10)
-  - [ ] Determinan (0/10)
-  - [ ] Matriks invers (0/10)
+  - [ ] Determinan (1/10)
+  - [ ] Matriks invers (1/10)
   - [ ] Adjoin (0/10)
   - [ ] Interpolasi (0/10)
   
