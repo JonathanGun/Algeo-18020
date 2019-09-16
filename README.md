@@ -33,9 +33,10 @@ root
 
 ## Progress Tracker
 ### Main.java
-  - [ ] Daftar Menu
-  - [ ] getSPLMethod()
-  - [ ] getDetMethod()
+  - [x] Daftar Menu
+  - [x] getSPLMethod()
+  - [x] getDetMethod()
+  - [x] getInvMethod()
   
  ### Matrix.java
   - [x] Constructor
@@ -49,21 +50,19 @@ root
   - [x] Gauss-Jordan
   - [ ] Metode Invers
   - [ ] Kaidah Cramer
-  - [ ] Solusi Tunggal
+  - [x] Solusi Tunggal
   - [ ] Tidak ada solusi
   - [ ] Solusi banyak (bentuk parametrik)
+  - [x] Interpolasi
   
  ### MatrixSquare.java
   - [x] Determinan(Cramer)
-  - [x] Determinan(REF)
-  - [ ] Determinan(...)
-  - [ ] Invers(Adjoin)
-  - [ ] Invers(...)
+  - [x] Determinan(GaussJordan/REF)
+  - [x] Determinan(Gauss)
+  - [x] Invers(Adjoin/Cramer)
+  - [ ] Invers(GaussJordan/OBE)
   - [ ] Cofactor
   - [ ] Adjoin
-  
- ### Interpolasi.java
-  - [ ] ?
   
  ### File Testing + Kunci
   - [ ] SPL solusi tunggal (1/10)
