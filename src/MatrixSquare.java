@@ -31,6 +31,7 @@ public class MatrixSquare extends MatrixSPL{
     }
     // Invers
 
+
     // DETERMINAN
     // Cramer
     public double detCram(MatrixSquare m){
@@ -78,7 +79,7 @@ public class MatrixSquare extends MatrixSPL{
             for(int c = 1; c <= m.cols; c++){
                 copyMatrix(m, newm);
                 newm.reduce(newm,r,c);
-                double det = newm.detGauss(newm);
+                double det = newm.detGauss(newm)*Math.pow(-1,r+c);
                 answ.setElmt(r,c,det);
 
 
@@ -96,4 +97,5 @@ public class MatrixSquare extends MatrixSPL{
     }
 
     // Operasi Lain
+
 }
