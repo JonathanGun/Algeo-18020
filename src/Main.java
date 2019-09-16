@@ -119,11 +119,9 @@ public class Main {
                 if(invchoice == 1) {
                     System.out.println("Menggunakan metode eliminasi Gauss-Jordan (REF):");
                     msq = msq.invGaussJordan(msq);
-                    msq.print();
                 } else if(invchoice == 2) {
                     System.out.println("Menggunakan Metode Crammer");
                     msq = msq.invCram((msq));
-                    msq.print();
                 }
                 msq.print();
                 
