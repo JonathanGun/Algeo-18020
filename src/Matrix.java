@@ -214,13 +214,15 @@ public class Matrix{
 
     public void splGauss(){
         Matrix ans = this.duplicateMatrix().gaussElim();
-        this.getSolution();
+        ans.getSolution();
+        this.Solution = ans.Solution;
         this.printSolution();
     }
 
     public void splGaussJordan(){
         Matrix ans = this.duplicateMatrix().gaussJordanElim();
-        this.getSolution();
+        ans.getSolution();
+        this.Solution = ans.Solution;
         this.printSolution();
     }
 
@@ -303,9 +305,13 @@ public class Matrix{
                 return;
             }
         }
-        this.Solution = new double[this.rows+1];
-        for(int r = 1; r <= this.rows; r++){
-            this.Solution[r] = this.TabInt[r][this.cols];
+
+        for(int r = this.rows; r >= 1; r--){
+            double sum = this.getElmt(r, this.cols);
+            for(int c = this.cols-1; c >= r; c--){
+                sum -= this.getElmt(r, c)*this.Solution[c];
+            }
+            this.Solution[r] = sum/this.getElmt(r,r);
         }
     }
 
