@@ -45,15 +45,14 @@ public class Main {
         System.out.println("Menu Metode Determinan");
         System.out.println("1. Metode eliminasi Gauss");
         System.out.println("2. Metode eliminasi Gauss-Jordan");
-        System.out.println("3. Metode matriks balikan");
-        System.out.println("4. Kaidah Cramer");
+        System.out.println("3. Kaidah Cramer");
         int choice;
         do{
             System.out.println("Metode apa yang Anda inginkan?");
             choice = input.nextInt();
-            if ((choice < 1) || (choice > 4))
+            if ((choice < 1) || (choice > 3))
                 System.out.println("Input tidak valid. Silakan ulangi!");
-        } while ((choice < 1) || (choice > 4));
+        } while ((choice < 1) || (choice > 3));
         return choice;
     }
 
@@ -108,8 +107,6 @@ public class Main {
                     System.out.println("Menggunakan metode eliminasi Gauss-Jordan (REF):");
                     System.out.println(msq.detGaussJordan(msq));
                 } else if (detchoice == 3){
-
-                } else if (detchoice == 4){
                     System.out.println("Menggunakan Metode Cramer:");
                     System.out.println(msq.detCram(msq));
                 }
@@ -134,12 +131,14 @@ public class Main {
                 System.out.println(msq.cofactor(msq));
                 
             } else if (choice == 5){
-                msq.inputMatrix(input);
-                msq.convertToCoeff();
-                System.out.println(msq.adjoin(msq));
+                msq = msq.adjoin(msq);
                 
             } else if (choice == 6){
-                //interpolasi
+                mspl.inputInterpolation(input);
+                mspl.gaussJordanElim();
+                mspl.getSolution();
+                mspl.printSolution();
+                mspl.print();
             }
 
             choice = getMenu();

@@ -52,6 +52,47 @@ public class MatrixSPL extends Matrix{
         jordanElim();
     }
 
+
+    // Interpolasi
+    public void inputInterpolation(Scanner input){
+        this.rows = input.nextInt();
+        this.cols = this.rows+1;
+        this.makeEmpty();
+        for(int r = 1; r <= this.rows; r++){
+            double x, y;
+            x = input.nextDouble();
+            y = input.nextDouble();
+            for(int c = 1; c <= this.cols; c++){
+                if (c != this.cols) this.setElmt(r, c, Math.pow(x, c-1));
+                else this.setElmt(r, c, y);
+            }
+        }
+    }
+
+    // Invers
+    public Matrix inversSPL (Matrix m) {
+        Matrix newx = new Matrix();
+        MatrixSquare newm = new MatrixSquare();
+        Matrix answ = new Matrix();
+        newx.makeEmpty();
+        answ.makeEmpty();
+        newm.makeEmpty();
+        copyMatrix(m, newm);
+        newm.convertToCoeff();
+        newx.rows = m.rows;
+        newx.cols = 1;
+        for(int r = 1; r <= m.rows; r++){
+            int c = 1;
+            double b = m.getElmt(r,m.cols);
+            newx.setElmt(r,c,b);
+        }
+        newm = newm.invCram(newm);
+        answ.rows = m.rows;
+        answ.cols = 1;
+        answ = kaliMatrix(newm.convertToMatrix(), newx);
+        return answ;
+    }
+
     // Operasi lain
     public void getSolution(){
     	for(int r = 1; r <= this.rows; r++){
@@ -64,5 +105,12 @@ public class MatrixSPL extends Matrix{
     	for(int r = 1; r <= this.rows; r++){
     		this.Solution[r] = this.TabInt[r][this.cols];
     	}
+    }
+
+    public void printSolution(){
+        System.out.println("Solusi dari matriks SPL:");
+        for(int r = 1; r <= this.rows; r++){
+            System.out.printf("X%d = %f\n", r, this.Solution[r]);
+        }
     }
 }
