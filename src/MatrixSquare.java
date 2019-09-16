@@ -29,8 +29,57 @@ public class MatrixSquare extends MatrixSPL{
         this.makeEmpty();
         this.inputElements(input);
     }
-    // Invers
 
+    // INVERS
+    // Gauss-Jordan
+    public MatrixSquare invGaussJordan (MatrixSquare m) {
+        MatrixSquare answ = new MatrixSquare();
+        answ.rows = m.rows;
+        answ.cols = m.cols;
+        answ.makeEmpty();
+
+        MatrixSquare answtemp = new MatrixSquare();
+        answtemp.rows = 2*(m.rows);
+        answtemp.cols = 2*(m.cols);
+        answtemp.makeEmpty();
+        copyMatrix(m, answtemp);
+        answtemp.convertToCoeff();
+        for(int r=1; r<=answtemp.rows; r++) {
+            for(int c=(answtemp.cols/2)+1; c<=answtemp.cols; c++) {
+                if(r==c) {
+                    answtemp.setElmt(r, c, 1);
+                }
+                else{
+                    answtemp.setElmt(r, c, 0);
+                }
+            }
+        }
+        answtemp.gaussJordanElim();
+        
+        for(int r=1; r<=answ.rows; r++) {
+            for(int c=1; c<=answ.cols; c++) {
+                double a = answtemp.getElmt(r, c+(answtemp.cols/2));
+                answ.setElmt(r, c, a);
+            }
+        }
+        return answ;
+    }
+
+    // Cramer
+    public MatrixSquare invCram (MatrixSquare m) {
+        MatrixSquare answ = new MatrixSquare();
+        answ.rows = m.rows;
+        answ.cols = m.cols;
+        answ.makeEmpty();
+        double x = 1/detGauss(m);
+        answ = adjoin(m);
+        for(int r=1; r<=m.rows; r++) {
+            for(int c=1; c<=m.cols; c++) {
+                answ.TabInt[r][c]*=x;
+            }
+        }
+        return answ;
+    }
 
     // DETERMINAN
     // Cramer

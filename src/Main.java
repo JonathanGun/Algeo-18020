@@ -121,20 +121,22 @@ public class Main {
                 int invchoice = getInvMethod();
                 if(invchoice == 1) {
                     System.out.println("Menggunakan metode eliminasi Gauss-Jordan (REF):");
-                    //print hasil invers
+                    System.out.println(msq.invGaussJordan(msq));
                 } else if(invchoice == 2) {
                     System.out.println("Menggunakan Metode Crammer");
-                    //print hasil invers
+                    System.out.println(msq.invCram((msq)));
                 }
                 msq.print();
                 
             } else if (choice == 4){
                 msq.inputMatrix(input);
                 msq.convertToCoeff();
-                //print hasil kofaktor
+                System.out.println(msq.cofactor(msq));
                 
             } else if (choice == 5){
-                //print hasil adjoin = transpose dari kofaktor
+                msq.inputMatrix(input);
+                msq.convertToCoeff();
+                System.out.println(msq.adjoin(msq));
                 
             } else if (choice == 6){
                 //interpolasi
