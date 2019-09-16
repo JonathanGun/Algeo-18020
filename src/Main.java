@@ -118,17 +118,20 @@ public class Main {
                 int invchoice = getInvMethod();
                 if(invchoice == 1) {
                     System.out.println("Menggunakan metode eliminasi Gauss-Jordan (REF):");
-                    System.out.println(msq.invGaussJordan(msq));
+                    msq = msq.invGaussJordan(msq);
+                    msq.print();
                 } else if(invchoice == 2) {
                     System.out.println("Menggunakan Metode Crammer");
-                    System.out.println(msq.invCram((msq)));
+                    msq = msq.invCram((msq));
+                    msq.print();
                 }
                 msq.print();
                 
             } else if (choice == 4){
                 msq.inputMatrix(input);
                 msq.convertToCoeff();
-                System.out.println(msq.cofactor(msq));
+                msq = msq.cofactor(msq);
+                msq.print();
                 
             } else if (choice == 5){
                 msq = msq.adjoin(msq);
