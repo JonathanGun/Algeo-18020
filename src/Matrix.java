@@ -156,4 +156,24 @@ public class Matrix{
         }
         return true;
     }
+    protected Matrix kaliMatrix(Matrix m1, Matrix m2) { // mengalikan matriks m1 dan m2(m1*m2)
+        Matrix hsl = new Matrix();
+
+        if (m1.cols != m2.rows ) {
+            System.out.println("Tidak ada solusi");
+        } else {
+            hsl.rows = m1.rows;
+            hsl.cols = m2.cols;
+            for(int r1 = 1; r1 <= m1.rows; r1++ ) {
+                for(int c2 = 1; c2 <= m2.cols; c2++ ) {
+                    double b = 0;
+                    for(int r2 = 1; r2 <= m2.rows; r2++) {
+                         b = b + m1.getElmt(r1, r2) * m2.getElmt(r2, c2);
+                    }
+                    hsl.setElmt(r1, c2, b);
+                }
+            }
+        }
+        return hsl;
+    }
 }
