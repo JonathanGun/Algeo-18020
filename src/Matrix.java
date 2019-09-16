@@ -50,6 +50,7 @@ public class Matrix{
                 this.cols = input.nextInt();
             } catch (FileNotFoundException e){
                 System.out.printf("File not found, will use keyboard");
+                useKeyboard = 1;
             }
         }
 
@@ -58,8 +59,8 @@ public class Matrix{
             System.out.printf("Masukkan jumlah kolom: "); this.cols = input.nextInt();
         }
 
-        makeEmpty();
-        inputElements(input);
+        this.makeEmpty();
+        this.inputElements(input);
     }
 
     public void print(){

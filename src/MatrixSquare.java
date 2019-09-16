@@ -16,15 +16,18 @@ public class MatrixSquare extends MatrixSPL{
                 this.cols = this.rows+1;
             } catch (FileNotFoundException e){
                 System.out.printf("File not found, will use keyboard");
+                useKeyboard = 1;
             }
         }
 
         if (useKeyboard == 1){
-            System.out.printf("Masukkan ordo matriks: "); this.rows = input.nextInt(); this.cols = this.rows+1;
+            System.out.printf("Masukkan ordo matriks: ");
+            this.rows = input.nextInt();
+            this.cols = this.rows+1;
         }
 
-        makeEmpty();
-        inputElements(input);
+        this.makeEmpty();
+        this.inputElements(input);
     }
     // Invers
 
@@ -48,8 +51,8 @@ public class MatrixSquare extends MatrixSPL{
     // Gauss - EF
     public double detGauss(MatrixSquare m){
         m.gaussElim();
-        for(int r = 1; r <= this.rows; r++){
-            if (this.TabInt[r][r] == 0) return 0;
+        for(int r = 1; r <= m.rows; r++){
+            if (m.TabInt[r][r] == 0) return 0;
         }
         return m.scalar;
     }
@@ -57,8 +60,8 @@ public class MatrixSquare extends MatrixSPL{
     // Gauss Jordan - REF
     public double detGaussJordan(MatrixSquare m){
         m.gaussJordanElim();
-        for(int r = 1; r <= this.rows; r++){
-            if (this.TabInt[r][r] == 0) return 0;
+        for(int r = 1; r <= m.rows; r++){
+            if (m.TabInt[r][r] == 0) return 0;
         }
         return m.scalar;
     }
