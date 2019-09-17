@@ -7,6 +7,7 @@ public class Matrix{
     private int rows, cols;
     private double scalar;
     private double[] Solution;
+    private boolean isInterpolationMatrix;
 
     // Constructor
     public Matrix(int r, int c){
@@ -28,10 +29,43 @@ public class Matrix{
     }
 
     // I/O
+    public void showMatrix(){
+        this.print();
+    }
+
+    private void print(){
+        if (this.rows == 0) System.out.println("Matriks kosong!");
+        for(int r = 1; r <= this.rows; r++) {
+            System.out.printf("|");
+            for(int c = 1; c <= this.cols; c++) {
+                System.out.printf("%.2f ", this.getElmt(r, c));
+            }
+            System.out.println("|");
+        }
+    }
+
+    private void printInterpolationData(){
+        for(int r = 1; r <= this.rows; r++){
+            System.out.printf("%.5f %.5f\n",this.getElmt(r, 2), this.getElmt(r, this.cols));
+        }
+    }
+
     private void inputElements(Scanner input){
         for(int r = 1; r <= this.rows; r++) {
             for(int c = 1; c <= this.cols; c++) {
                 this.setElmt(r, c, input.nextDouble());
+            }
+        }
+    }
+
+    private void inputInterpolationData(Scanner input){
+        for(int r = 1; r <= this.rows; r++){
+            double x = input.nextDouble();
+            double y = input.nextDouble();
+            // set koef baris dengan x^0, x^1, x^2, x^3, ..., y (matriks interpolasi)
+            for(int c = 1; c <= this.cols; c++){
+                if (c != this.cols) this.setElmt(r, c, Math.pow(x, c-1));
+                else this.setElmt(r, c, y);
             }
         }
     }
@@ -46,13 +80,14 @@ public class Matrix{
     }
 
     public void inputMatrix(Scanner input, boolean isSq){
-        if (this.rows != 0) {
-            System.out.printf("Matriks sebelumnya:\n");
+        if (!this.isInterpolationMatrix && !(this.isSquareMatrix() ^ isSq)) {
+            System.out.printf("Tersimpan matriks sebelumnya:\n");
             this.print();
-            System.out.printf("Apakah ingin input ulang?(0/1)\n");
+            System.out.printf("Apakah anda ingin input matriks baru?(0/1)\n");
             if (input.nextInt() == 0) return;
         }
-        System.out.printf("Input from file/keyboard?(0/1)\n");
+        isInterpolationMatrix = false;
+        System.out.printf("Input dari file(0)/keyboard(1)?\n");
         int useKeyboard = input.nextInt();
         
         if (useKeyboard == 0){
@@ -63,14 +98,20 @@ public class Matrix{
                 this.getDimension(new Scanner(inputFile));
                 input = new Scanner(inputFile);
             } catch (FileNotFoundException e){
-                System.out.printf("File not found, will use keyboard");
+                System.out.printf("File tidak ditemukan! Input akan dilakukan melalui keyboard!\n");
                 useKeyboard = 1;
             }
         }
 
         if (useKeyboard == 1){
-            System.out.printf("Masukkan jumlah baris: "); this.rows = input.nextInt();
-            System.out.printf("Masukkan jumlah kolom: "); this.cols = input.nextInt();
+            if (isSq){
+                System.out.printf("Masukkan ordo matriks: ");
+                this.rows = input.nextInt();
+                this.cols = this.rows+1;
+            } else {
+                System.out.printf("Masukkan jumlah baris: "); this.rows = input.nextInt();
+                System.out.printf("Masukkan jumlah kolom: "); this.cols = input.nextInt();    
+            }
         }
 
         this.TabInt = new double[this.rows+5][this.cols+5];
@@ -79,30 +120,34 @@ public class Matrix{
     }
 
     public void inputInterpolation(Scanner input){
-        this.rows = input.nextInt();
+        if (this.isInterpolationMatrix){
+            System.out.printf("Tersimpan data interpolasi sebelumnya:\n");
+            this.printInterpolationData();
+            System.out.printf("Apakah anda ingin input titik(-titik) baru?(0/1)\n");
+            if (input.nextInt() == 0) return;
+        }
+        isInterpolationMatrix = true;
+        System.out.printf("Input dari file(0)/keyboard(1)?\n");
+        int useKeyboard = input.nextInt();
+        
+        if (useKeyboard == 0){
+            System.out.printf("Masukkan nama file+extension: ");
+            String fileName = input.next();
+            try{
+                File inputFile = new File("../test/" + fileName);
+                this.getDimension(new Scanner(inputFile));
+                input = new Scanner(inputFile);
+            } catch (FileNotFoundException e){
+                System.out.printf("File tidak ditemukan! Input akan dilakukan melalui keyboard!\n");
+                useKeyboard = 1;
+            }
+        }
+
+        if (useKeyboard == 1) this.rows = input.nextInt();
         this.cols = this.rows+1;
         this.TabInt = new double[this.rows+5][this.cols+5];
         this.Solution = new double[this.rows+5];
-        for(int r = 1; r <= this.rows; r++){
-            double x = input.nextDouble();
-            double y = input.nextDouble();
-            // set koef baris dengan x^0, x^1, x^2, x^3, ..., y (matriks interpolasi)
-            for(int c = 1; c <= this.cols; c++){
-                if (c != this.cols) this.setElmt(r, c, Math.pow(x, c-1));
-                else this.setElmt(r, c, y);
-            }
-        }
-    }
-
-    public void print(){
-        if (this.rows == 0) System.out.println("Matriks kosong!");
-        for(int r = 1; r <= this.rows; r++) {
-            System.out.printf("|");
-            for(int c = 1; c <= this.cols; c++) {
-                System.out.printf("%.2f ", this.getElmt(r, c));
-            }
-            System.out.println("|");
-        }
+        this.inputInterpolationData(input);
     }
 
     // ================================= Elementary Row Operation ================================= //
@@ -213,14 +258,16 @@ public class Matrix{
     // ====================================== 1. BAGIAN SPL ========================================== //
 
     public void splGauss(){
-        Matrix ans = this.duplicateMatrix().gaussElim();
+        Matrix ans = this.duplicateMatrix()
+                         .gaussElim();
         ans.getSolution();
         this.Solution = ans.Solution;
         this.printSolution();
     }
 
     public void splGaussJordan(){
-        Matrix ans = this.duplicateMatrix().gaussJordanElim();
+        Matrix ans = this.duplicateMatrix()
+                         .gaussJordanElim();
         ans.getSolution();
         this.Solution = ans.Solution;
         this.printSolution();
@@ -232,7 +279,12 @@ public class Matrix{
         // A: getCoeffMatrix, B: getLastCol
         Matrix a = this.getCoeffMatrix();
         Matrix b = this.getLastCol();
-        a = a.invCram();
+        if (a.detGauss() != 0) a = a.invCramUtil();
+        else {
+            System.out.println("Tidak bisa dicari matriks invers! Determinannya 0!");
+            return;
+        }
+
         Matrix x  = multMatrix(a, b);
         for(int i = 1; i <= this.rows; i++){
             this.Solution[i] = x.getElmt(i, 1);
@@ -272,8 +324,9 @@ public class Matrix{
             }
 
             // ubah elmt ke-pivot menjadi 1, agar menjadi echelon form
-            scaleRow(pivot, 1/m.getElmt(pivot, pivot));
+            m.scaleRow(pivot, 1/m.getElmt(pivot, pivot));
         }
+        m.scalar *= this.scalar;
         return m;
     }
 
@@ -289,12 +342,14 @@ public class Matrix{
                 if (k != 0) m.addRow(r, pivot, -k);
             }
         }
+        m.scalar *= this.scalar;
         return m;
     }
 
     // Gauss Jordan
     private Matrix gaussJordanElim(){
-        return this.gaussElim().jordanElim();
+        return this.gaussElim()
+                   .jordanElim();
     }
 
     // Operasi lain
@@ -333,9 +388,20 @@ public class Matrix{
 
     // INVERS
     // Gauss-Jordan
-    public Matrix invGaussJordan(){
+    public void invGaussJordan(){
+        if (this.detGauss() == 0){
+            System.out.println("Tidak bisa dicari matriks invers! Determinannya 0!");
+        } else {
+            this.duplicateMatrix()
+                .invGaussJordanUtil()
+                .print();
+        }
+    }
+
+    private Matrix invGaussJordanUtil(){
         // pakai OBE, ditempelin matriks identitas di sblh kanannya
-        Matrix m = this.duplicateMatrix().getCoeffMatrix();
+        Matrix m = this.duplicateMatrix()
+                       .getCoeffMatrix();
 
         // copy m ke answtemp untuk di OBE
         Matrix answtemp = new Matrix(m.rows, 2*m.cols);
@@ -366,11 +432,27 @@ public class Matrix{
     }
 
     // Cramer
-    public Matrix invCram(){
+    public void invCram(){
+        if (this.detGauss() == 0){
+            System.out.println("Tidak bisa dicari matriks invers! Determinannya 0!");
+        } else {
+            this.duplicateMatrix()
+                .invCramUtil()
+                .print();
+        }
+    }
+
+    private Matrix invCramUtil(){
         // 1/det * adjoin
-        Matrix answ = this.duplicateMatrix().getCoeffMatrix();
-        double x = 1/answ.detGauss();
-        answ = answ.adjoin();
+        Matrix answ = this.duplicateMatrix()
+                          .getCoeffMatrix();
+        double x = answ.detGauss();
+        if (x == 0){
+            answ.setElmt(1, 1, Double.NaN);
+            return answ;
+        }
+
+        answ = answ.getAdjoin();
         for(int r = 1; r <= this.rows; r++) {
             for(int c = 1; c <= this.cols; c++) {
                 answ.TabInt[r][c] *= x;
@@ -382,17 +464,20 @@ public class Matrix{
     // DETERMINAN
     // Cramer
     public double detCram(){
-        return this.duplicateMatrix().getCoeffMatrix().detCramUtil();
+        return this.duplicateMatrix()
+                   .getCoeffMatrix()
+                   .detCramUtil();
     }
 
     private double detCramUtil(){
         // Basis
         if (this.rows == 0) return 1;
-
+        
         // Rekursi
         double ans = 0;
         for(int c = 1; c <= this.cols; c++){
-            Matrix tmp = this.duplicateMatrix().reduce(1, c);
+            Matrix tmp = this.duplicateMatrix()
+                             .reduce(1, c);
             ans += this.getElmt(1, c) * tmp.detCramUtil() * Math.pow(-1,c+1);
         }
         return ans;
@@ -400,7 +485,8 @@ public class Matrix{
 
     // Gauss - EF
     public double detGauss(){
-        Matrix m = this.duplicateMatrix().getCoeffMatrix().gaussElim();
+        Matrix m = this.duplicateMatrix()
+                       .gaussElim();
         for(int r = 1; r <= m.rows; r++){
             if (m.getElmt(r, r) == 0) return 0;
         }
@@ -409,40 +495,45 @@ public class Matrix{
 
     // Gauss Jordan - REF
     public double detGaussJordan(){
-        Matrix m = this.duplicateMatrix().getCoeffMatrix().gaussJordanElim();
+        Matrix m = this.duplicateMatrix()
+                       .gaussJordanElim();
         for(int r = 1; r <= m.rows; r++){
             if (m.getElmt(r, r) == 0) return 0;
         }
         return m.scalar;
     }
 
-    // COFACTOR
-    public Matrix cofactor(){
-        Matrix answ = this.duplicateMatrix();
+    // Cofactor
+    public void cofactor(){
+        this.getCofactor()
+            .print();
+    }
+
+    private Matrix getCofactor(){
+        Matrix answ = this.duplicateMatrix()
+                          .getCoeffMatrix();
 
         Matrix newm;
         for(int r = 1; r <= answ.rows; r++){
             for(int c = 1; c <= answ.cols; c++){
-                newm = answ.duplicateMatrix();
-
-                answ.print();
-                System.out.println("Sebelum direduce:");
-                newm.print();
-
+                newm = this.duplicateMatrix();
                 newm = newm.reduce(r, c);
-
-                System.out.printf("Setelah direduce %d %d:", r, c);
-                newm.print();
-
-                double det = newm.detGauss() * Math.pow(-1, r+c);
+                double det = newm.detCram() * Math.pow(-1, r+c);
                 answ.setElmt(r, c, det);
             }
         }
         return answ;
     }
 
-    // ADJOIN (Cofactor transpose)
-    public Matrix adjoin(){
-        return this.duplicateMatrix().cofactor().transpose();
+    // Adjoin (Cofactor transpose)
+    public void adjoin(){
+        this.getAdjoin()
+            .print();
+    }
+
+    public Matrix getAdjoin(){
+        return this.duplicateMatrix()
+                   .getCofactor()
+                   .transpose();
     }
 }

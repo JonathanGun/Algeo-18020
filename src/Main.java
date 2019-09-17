@@ -77,7 +77,7 @@ public class Main {
         int choice = getMenu();
         while (choice != 7){
             if (choice == 0){
-                m.print();
+                m.showMatrix();
 
             // Sistem Persamaan Linier
             } else if (choice == 1){
@@ -118,20 +118,21 @@ public class Main {
                 int invchoice = getInvMethod();
                 if(invchoice == 1) {
                     System.out.println("Menggunakan metode eliminasi Gauss-Jordan (REF):");
-                    m.invGaussJordan().print();
+                    m.invGaussJordan();
                 } else if(invchoice == 2) {
                     System.out.println("Menggunakan Metode Crammer");
-                    m.invCram().print();
+                    m.invCram();
                 }
             
             // Cofactor
             } else if (choice == 4){
                 m.inputMatrix(input, true);
-                m.cofactor().print();
+                m.cofactor();
             
             // Adjoin
             } else if (choice == 5){
-                m.adjoin().print();
+                m.inputMatrix(input, true);
+                m.adjoin();
             
             // Interpolation
             } else if (choice == 6){
@@ -142,5 +143,6 @@ public class Main {
             System.out.println();
             choice = getMenu();
         }
+        System.out.printf("Terima kasih!")
     }
 }
