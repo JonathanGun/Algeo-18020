@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.Vector;
 import java.io.File;
 import java.io.FileNotFoundException;
 
@@ -372,18 +373,29 @@ public class Matrix{
     // Operasi lain
     private void getSolution(){
         for(int r = this.rows; r >= 1; r--){
-            double sum = this.getElmt(r, this.cols);
-            for(int c = this.cols-1; c >= r; c--){
-                sum -= this.getElmt(r, c)*this.Solution[c];
-            }
-            this.Solution[r] = sum/this.getElmt(r,r);
+            this.Solution[r] = this.getElmt(r, this.cols)/this.getElmt(r, r);
         }
     }
 
     private void printSolution(){
         System.out.println("Solusi dari matriks SPL:");
-        for(int r = 1; r <= this.rows; r++){
-            System.out.printf("X%d = %f\n", r, this.Solution[r]);
+        Vector<Integer> freeVar = new Vector<>();
+        for(int r = this.rows; r >= 1; r--){
+            System.out.printf("X%d = ", r);
+            if(Double.isNaN(this.Solution[r])){
+                freeVar.add(r);
+                System.out.printf("%c ", 'a'+freeVar.size()-1);
+            } else {
+                System.out.printf("%f ", this.Solution[r]);
+                for(int i = 0; i <= freeVar.size()-1; i++){
+                    int idx = freeVar.get(i);
+                    double x = this.getElmt(r, idx);
+                    if(x != 0){
+                        System.out.printf("+ %.2f%c ", -x, 'a'+freeVar.size()-1);
+                    } 
+                }
+            }
+            System.out.println();
         }
     }
 
