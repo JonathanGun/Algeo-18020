@@ -80,7 +80,7 @@ public class Matrix{
     }
 
     public void inputMatrix(Scanner input, boolean isSq){
-        if (!this.isInterpolationMatrix && !(this.isSquareMatrix() ^ isSq)) {
+        if (!this.isInterpolationMatrix && !(this.isSquareMatrix() ^ isSq) && this.rows != 0) {
             System.out.printf("Tersimpan matriks sebelumnya:\n");
             this.print();
             System.out.printf("Apakah anda ingin input matriks baru?(0/1)\n");
@@ -120,7 +120,7 @@ public class Matrix{
     }
 
     public void inputInterpolation(Scanner input){
-        if (this.isInterpolationMatrix){
+        if (this.isInterpolationMatrix && this.rows != 0){
             System.out.printf("Tersimpan data interpolasi sebelumnya:\n");
             this.printInterpolationData();
             System.out.printf("Apakah anda ingin input titik(-titik) baru?(0/1)\n");
@@ -230,11 +230,11 @@ public class Matrix{
         return newm;
     }
 
-    private boolean isAllZero(int r){
-        for(int c = 1; c <= this.cols; c++){
-            if (this.getElmt(r, c) != 0) return false;
+    private boolean isValidRow(int r){
+        for(int c = 1; c < this.cols; c++){
+            if (this.getElmt(r, c) != 0) return true;
         }
-        return true;
+        return this.getElmt(r, this.cols) == 0;
     }
 
     private Matrix multMatrix(Matrix m1, Matrix m2) {
@@ -255,22 +255,39 @@ public class Matrix{
         return ans;
     }
 
+    private boolean hasSolution(){
+        for(int r = 1; r <= this.rows; r++){
+            if (!this.isValidRow(r)){
+                return false;
+            }
+        }
+        return true;
+    }
+
     // ====================================== 1. BAGIAN SPL ========================================== //
 
     public void splGauss(){
         Matrix ans = this.duplicateMatrix()
                          .gaussElim();
-        ans.getSolution();
-        this.Solution = ans.Solution;
-        this.printSolution();
+        ans.print();
+        if (!ans.hasSolution()) System.out.println("Tidak ada solusi");
+        else {
+            ans.getSolution();
+            this.Solution = ans.Solution;
+            this.printSolution();
+        }
     }
 
     public void splGaussJordan(){
         Matrix ans = this.duplicateMatrix()
                          .gaussJordanElim();
-        ans.getSolution();
-        this.Solution = ans.Solution;
-        this.printSolution();
+        ans.print();
+        if (!ans.hasSolution()) System.out.println("Tidak ada solusi");
+        else {
+            ans.getSolution();
+            this.Solution = ans.Solution;
+            this.printSolution();
+        }
     }
 
     // Invers
@@ -354,13 +371,6 @@ public class Matrix{
 
     // Operasi lain
     private void getSolution(){
-        for(int r = 1; r <= this.rows; r++){
-            if (this.isAllZero(r)){
-                this.Solution = new double[0];
-                return;
-            }
-        }
-
         for(int r = this.rows; r >= 1; r--){
             double sum = this.getElmt(r, this.cols);
             for(int c = this.cols-1; c >= r; c--){

@@ -143,6 +143,6 @@ public class Main {
             System.out.println();
             choice = getMenu();
         }
-        System.out.printf("Terima kasih!")
+        System.out.printf("Terima kasih!");
     }
 }
