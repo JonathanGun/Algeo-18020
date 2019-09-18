@@ -111,7 +111,7 @@ public class Matrix{
                 this.cols = this.rows+1;
             } else {
                 System.out.printf("Masukkan jumlah baris: "); this.rows = input.nextInt();
-                System.out.printf("Masukkan jumlah kolom: "); this.cols = input.nextInt();    
+                System.out.printf("Masukkan jumlah kolom: "); this.cols = input.nextInt()+1;    
             }
         }
 
@@ -411,6 +411,7 @@ public class Matrix{
     public void interpolate(){
         this.gaussJordanElim();
         this.getSolution();
+        this.print();
         this.printSolution();
     }
 
