@@ -259,8 +259,10 @@ public class Matrix{
     }
 
     private boolean hasSolution(){
-        for(int r = 1; r <= this.rows; r++){
-            if (!this.isValidRow(r)){
+        Matrix m = this.duplicateMatrix();
+        m.gaussElim();
+        for(int r = 1; r <= m.rows; r++){
+            if (!m.isValidRow(r)){
                 return false;
             }
         }
@@ -312,10 +314,28 @@ public class Matrix{
         this.printSolution();
     }
 
+
     public void splCram(){
-        if (!this.isSquareMatrix()) System.out.println("Matriks tidak persegi! Tidak dapat dicari determinannya!");
         // yang ditukar kolom i dengan kolom terakhir (manfaatkan getlastcol)
+        if (this.hasSolution()) {
+            Matrix b = this.getCoeffMatrix();
+            if (b.detGauss() == 0) {
+                System.out.println("Matriks ini determinan 0, tidak bisa ditentukan dengan metode Crammer");
+            } else {
+            Matrix a = this.getLastCol();
+            for (int j = 1 ; j<= b.cols; j ++) {
+                Matrix smtr = b.duplicateMatrix();
+                for (int i = 1 ; i<= b.rows ; i ++) {
+                    smtr.setElmt(i, j, a.getElmt(i, 1));
+                        
+                    }
+                    this.Solution[j] = smtr.detGauss() / b.detGauss(); 
+                }
+            }
+            this.printSolution();
+        }
     }
+    
 
     // GAUSS-JORDAN
     // Gauss
@@ -413,6 +433,47 @@ public class Matrix{
         this.getSolution();
         this.print();
         this.printSolution();
+    }
+
+    public double nilaiMaksimal() {
+        double maks = this.getElmt(1,2);
+
+        for(int r=1; r<=this.rows; r++) {
+            if(maks < getElmt(r, 2)) {
+                maks = getElmt(r, 2);
+            }
+        }
+        
+        return maks;
+    }
+
+    public double nilaiMinimum() {
+        double min = this.getElmt(1, 2);
+
+        for(int r=1; r<=this.rows; r++) {
+            if(min > getElmt(r, 2)) {
+                min = getElmt(r, 2);
+            }
+        }
+
+        return min;
+    }
+
+    public double valueFunction(Scanner input) {
+        double x;
+        do{
+            x = input.nextDouble();
+            if((x<this.nilaiMinimum()) || (x>this.nilaiMaksimal())) {
+                System.out.println("Titik tidak di dalam range. Silakan ulangi.");
+            }
+        }while((x<this.nilaiMinimum()) || (x>this.nilaiMaksimal()));
+
+        double hasil = 0;
+        for(int c=1; c<=this.cols; c++) {
+            hasil+=this.Solution[c]*(Math.pow(x, c-1));
+        }
+
+        return hasil;
     }
 
     // ================================== 3. BAGIAN MATRIKS NxN =================================== //
