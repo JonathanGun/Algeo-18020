@@ -386,6 +386,7 @@ public class Matrix{
                 if (k != 0) m.addRow(r, pivot, -k);
             }
         }
+        m.scalar *= this.scalar;
         return m;
     }
 
@@ -440,7 +441,7 @@ public class Matrix{
         Matrix ans = this.gaussJordanElim();
         ans.getSolution();
         this.Solution = ans.Solution;
-        this.printSolutionInterpolation();
+        this.printSolution();
     }
 
     public double nilaiMaksimal() {
@@ -467,31 +468,9 @@ public class Matrix{
         return min;
     }
 
-    private void printSolutionInterpolation() {
-        System.out.print("f(x) = ");
-        for(int i=1; i<=this.cols; i++) {
-            if(this.Solution[i]==0) {
-                i++;
-            } else if(i==1) {
-                System.out.printf("%.4f",this.Solution[i]);
-            } else {
-                if(this.Solution[i]>0) {
-                    System.out.print("+");
-                }
-                System.out.printf("%.4fx",this.Solution[i]);
-                if(i>2){
-                    System.out.printf("^%d",i-1);
-                }
-            }
-        }
-        System.out.println();
-
-    }
-
     public double valueFunction(Scanner input) {
         double x;
         do{
-            System.out.println("Masukkan nilai x untuk ditaksir: ");
             x = input.nextDouble();
             if((x<this.nilaiMinimum()) || (x>this.nilaiMaksimal())) {
                 System.out.println("Titik tidak di dalam range. Silakan ulangi.");
@@ -566,8 +545,7 @@ public class Matrix{
 
     private Matrix invCramUtil(){
         // 1/det * adjoin
-        Matrix answ = this.duplicateMatrix()
-                          .getCoeffMatrix();
+        Matrix answ = this.duplicateMatrix();
         double x = answ.detGauss();
         if (x == 0){
             answ.setElmt(1, 1, Double.NaN);
@@ -577,7 +555,7 @@ public class Matrix{
         answ = answ.getAdjoin();
         for(int r = 1; r <= this.rows; r++) {
             for(int c = 1; c <= this.cols; c++) {
-                answ.TabInt[r][c] *= x;
+                answ.TabInt[r][c] /= x;
             }
         }
         return answ;
