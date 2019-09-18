@@ -123,11 +123,11 @@ public class Main {
                 m.inputMatrix(input, true);
                 int detchoice = getDetMethod();
                 if (detchoice == 1){
-                    m.detGauss();
+                    System.out.println(m.detGauss());
                 } else if (detchoice == 2){
-                    m.detGaussJordan();
+                    System.out.println(m.detGaussJordan());
                 } else if (detchoice == 3){
-                    m.detCram();
+                    System.out.println(m.detCram());
                 }
             
             // Invers
@@ -154,7 +154,7 @@ public class Main {
             } else if (choice == 6){
                 m.inputInterpolation(input);
                 m.interpolate();
-                System.out.printf("Nilai y = %.4f",m.valueFunction(input));
+                System.out.printf("Nilai y = %.4f", m.valueFunction(input));
             }
 
             System.out.println();

@@ -81,7 +81,7 @@ public class Matrix{
     }
 
     public void inputMatrix(Scanner input, boolean isSq){
-        if (!this.isInterpolationMatrix && !(this.isSquareMatrix() ^ isSq) && this.rows != 0) {
+        if (!this.isInterpolationMatrix && ((this.isSquareMatrix() && isSq) || !isSq) && this.rows != 0) {
             System.out.printf("Tersimpan matriks sebelumnya:\n");
             this.print();
             System.out.printf("Apakah anda ingin input matriks baru?(0/1)\n");
@@ -279,7 +279,7 @@ public class Matrix{
         else {
             ans.getSolution();
             this.Solution = ans.Solution;
-            this.printSolution();
+            ans.printSolution();
         }
     }
 
@@ -291,7 +291,7 @@ public class Matrix{
         else {
             ans.getSolution();
             this.Solution = ans.Solution;
-            this.printSolution();
+            ans.printSolution();
         }
     }
 
@@ -419,6 +419,11 @@ public class Matrix{
                 freeVar.add(r);
                 System.out.printf("%c ", 'a'+freeVar.size()-1);
             } else {
+                for(int c = this.cols-1; c > r; c--){
+                    if(this.getElmt(r, c) != 0){
+                        this.Solution[r] -= this.getElmt(r, c)*this.Solution[c];
+                    }
+                }
                 System.out.printf("%f ", this.Solution[r]);
                 for(int i = 0; i <= freeVar.size()-1; i++){
                     double x = this.getElmt(r, freeVar.get(i));
@@ -553,9 +558,9 @@ public class Matrix{
         if (this.detGauss() == 0){
             System.out.println("Tidak bisa dicari matriks invers! Determinannya 0!");
         } else {
-            this.duplicateMatrix()
-                .invCramUtil()
-                .print();
+            Matrix m = this.duplicateMatrix().invCramUtil();
+            if (m.getElmt(1,1) == Double.NaN) System.out.println("Tidak bisa dicari matriks invers! Determinannya 0!");
+            else m.print();
         }
     }
 
