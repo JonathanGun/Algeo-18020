@@ -299,19 +299,18 @@ public class Matrix{
     public void splInv() {
         // AX = B, maka X = A^-1 B
         // A: getCoeffMatrix, B: getLastCol
-        Matrix a = this.getCoeffMatrix();
-        Matrix b = this.getLastCol();
-        if (a.detGauss() != 0) a = a.invCramUtil();
-        else {
+        if(this.detGauss() == 0){
             System.out.println("Tidak bisa dicari matriks invers! Determinannya 0!");
-            return;
+        } else {
+            Matrix a = this.getCoeffMatrix();
+            Matrix b = this.getLastCol();
+            a = a.invCramUtil();
+            Matrix x  = multMatrix(a, b);
+            for(int i = 1; i <= this.cols; i++){
+                this.Solution[i] = x.getElmt(i, 1);
+            }
+            this.printSolution();
         }
-
-        Matrix x  = multMatrix(a, b);
-        for(int i = 1; i <= this.cols; i++){
-            this.Solution[i] = x.getElmt(i, 1);
-        }
-        this.printSolution();
     }
 
 
@@ -386,7 +385,6 @@ public class Matrix{
                 if (k != 0) m.addRow(r, pivot, -k);
             }
         }
-        m.scalar *= this.scalar;
         return m;
     }
 
