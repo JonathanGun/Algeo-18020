@@ -278,8 +278,8 @@ public class Matrix{
         if (!ans.hasSolution()) System.out.println("Tidak ada solusi");
         else {
             ans.getSolution();
-            ans.printSolution();
             this.Solution = ans.Solution;
+            this.printSolution();
         }
     }
 
@@ -290,8 +290,8 @@ public class Matrix{
         if (!ans.hasSolution()) System.out.println("Tidak ada solusi");
         else {
             ans.getSolution();
-            ans.printSolution();
             this.Solution = ans.Solution;
+            this.printSolution();
         }
     }
 
@@ -397,7 +397,7 @@ public class Matrix{
         for(int r = this.rows; r >= 1; r--){
             this.Solution[r] = this.getElmt(r, this.cols)/this.getElmt(r, r);
         }
-        for(int c = this.rows; c <= this.cols-1; c++){
+        for(int c = this.rows+1; c <= this.cols-1; c++){
             this.Solution[c] = 0.0/0.0;
         }
     }
@@ -429,9 +429,9 @@ public class Matrix{
 
     // ================================== 2. BAGIAN INTERPOLASI ==================================== //
     public void interpolate(){
-        this.gaussJordanElim();
-        this.getSolution();
-        this.print();
+        Matrix ans = this.gaussJordanElim();
+        ans.getSolution();
+        this.Solution = ans.Solution;
         this.printSolution();
     }
 
