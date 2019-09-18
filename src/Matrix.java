@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.Vector;
 import java.io.File;
 import java.io.FileNotFoundException;
 
@@ -15,7 +16,7 @@ public class Matrix{
         this.cols = c;
         this.scalar = 1;
         this.TabInt = new double[this.rows+5][this.cols+5];
-        this.Solution = new double[this.rows+5];
+        this.Solution = new double[this.cols+5];
     }
 
     // Selector
@@ -80,7 +81,7 @@ public class Matrix{
     }
 
     public void inputMatrix(Scanner input, boolean isSq){
-        if (!this.isInterpolationMatrix && !(this.isSquareMatrix() ^ isSq)) {
+        if (!this.isInterpolationMatrix && !(this.isSquareMatrix() ^ isSq) && this.rows != 0) {
             System.out.printf("Tersimpan matriks sebelumnya:\n");
             this.print();
             System.out.printf("Apakah anda ingin input matriks baru?(0/1)\n");
@@ -120,7 +121,7 @@ public class Matrix{
     }
 
     public void inputInterpolation(Scanner input){
-        if (this.isInterpolationMatrix){
+        if (this.isInterpolationMatrix && this.rows != 0){
             System.out.printf("Tersimpan data interpolasi sebelumnya:\n");
             this.printInterpolationData();
             System.out.printf("Apakah anda ingin input titik(-titik) baru?(0/1)\n");
@@ -197,6 +198,8 @@ public class Matrix{
 
     private Matrix duplicateMatrix(){
         Matrix newm = new Matrix(this.rows, this.cols);
+        newm.scalar = this.scalar;
+        newm.Solution = this.Solution;
         for(int r = 1; r <= this.rows; r++){
             for(int c = 1; c <= this.cols; c++){
                 newm.setElmt(r, c, this.getElmt(r, c));
@@ -230,11 +233,11 @@ public class Matrix{
         return newm;
     }
 
-    private boolean isAllZero(int r){
-        for(int c = 1; c <= this.cols; c++){
-            if (this.getElmt(r, c) != 0) return false;
+    private boolean isValidRow(int r){
+        for(int c = 1; c < this.cols; c++){
+            if (this.getElmt(r, c) != 0) return true;
         }
-        return true;
+        return this.getElmt(r, this.cols) == 0;
     }
 
     private Matrix multMatrix(Matrix m1, Matrix m2) {
@@ -255,22 +258,39 @@ public class Matrix{
         return ans;
     }
 
+    private boolean hasSolution(){
+        for(int r = 1; r <= this.rows; r++){
+            if (!this.isValidRow(r)){
+                return false;
+            }
+        }
+        return true;
+    }
+
     // ====================================== 1. BAGIAN SPL ========================================== //
 
     public void splGauss(){
         Matrix ans = this.duplicateMatrix()
                          .gaussElim();
-        ans.getSolution();
-        this.Solution = ans.Solution;
-        this.printSolution();
+        ans.print();
+        if (!ans.hasSolution()) System.out.println("Tidak ada solusi");
+        else {
+            ans.getSolution();
+            ans.printSolution();
+            this.Solution = ans.Solution;
+        }
     }
 
     public void splGaussJordan(){
         Matrix ans = this.duplicateMatrix()
                          .gaussJordanElim();
-        ans.getSolution();
-        this.Solution = ans.Solution;
-        this.printSolution();
+        ans.print();
+        if (!ans.hasSolution()) System.out.println("Tidak ada solusi");
+        else {
+            ans.getSolution();
+            ans.printSolution();
+            this.Solution = ans.Solution;
+        }
     }
 
     // Invers
@@ -286,7 +306,7 @@ public class Matrix{
         }
 
         Matrix x  = multMatrix(a, b);
-        for(int i = 1; i <= this.rows; i++){
+        for(int i = 1; i <= this.cols; i++){
             this.Solution[i] = x.getElmt(i, 1);
         }
         this.printSolution();
@@ -354,26 +374,36 @@ public class Matrix{
 
     // Operasi lain
     private void getSolution(){
-        for(int r = 1; r <= this.rows; r++){
-            if (this.isAllZero(r)){
-                this.Solution = new double[0];
-                return;
-            }
-        }
-
         for(int r = this.rows; r >= 1; r--){
-            double sum = this.getElmt(r, this.cols);
-            for(int c = this.cols-1; c >= r; c--){
-                sum -= this.getElmt(r, c)*this.Solution[c];
-            }
-            this.Solution[r] = sum/this.getElmt(r,r);
+            this.Solution[r] = this.getElmt(r, this.cols)/this.getElmt(r, r);
+        }
+        for(int c = this.rows; c <= this.cols-1; c++){
+            this.Solution[c] = 0.0/0.0;
         }
     }
 
     private void printSolution(){
         System.out.println("Solusi dari matriks SPL:");
-        for(int r = 1; r <= this.rows; r++){
-            System.out.printf("X%d = %f\n", r, this.Solution[r]);
+        Vector<Integer> freeVar = new Vector<>();
+        for(int c = this.cols-1; c > this.rows; c--){
+            System.out.printf("X%d = ", c);
+            freeVar.add(c);
+            System.out.printf("%c\n", 'a'+freeVar.size()-1);
+        }
+        for(int r = this.rows; r >= 1; r--){
+            System.out.printf("X%d = ", r);
+            if(Double.isNaN(this.Solution[r])){
+                freeVar.add(r);
+                System.out.printf("%c ", 'a'+freeVar.size()-1);
+            } else {
+                System.out.printf("%f ", this.Solution[r]);
+                for(int i = 0; i <= freeVar.size()-1; i++){
+                    double x = this.getElmt(r, freeVar.get(i));
+                    if(x < 0) System.out.printf("+ %.2f%c ", -x, 'a'+i);
+                    if(x > 0) System.out.printf("- %.2f%c ", x, 'a'+i);
+                }
+            }
+            System.out.println();
         }
     }
 
