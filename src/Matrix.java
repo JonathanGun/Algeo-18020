@@ -439,7 +439,7 @@ public class Matrix{
         Matrix ans = this.gaussJordanElim();
         ans.getSolution();
         this.Solution = ans.Solution;
-        this.printSolution();
+        this.printSolutionInterpolation();
     }
 
     public double nilaiMaksimal() {
@@ -464,6 +464,27 @@ public class Matrix{
         }
 
         return min;
+    }
+
+    private void printSolutionInterpolation() {
+        System.out.print("f(x) = ");
+        for(int i=1; i<=this.cols; i++) {
+            if(this.Solution[i]==0) {
+                i++;
+            } else if(i==1) {
+                System.out.printf("%.4f",this.Solution[i]);
+            } else {
+                if(this.Solution[i]>0) {
+                    System.out.print("+");
+                }
+                System.out.printf("%.4fx",this.Solution[i]);
+                if(i>2){
+                    System.out.printf("^%d",i-1);
+                }
+            }
+        }
+        System.out.println();
+
     }
 
     public double valueFunction(Scanner input) {
