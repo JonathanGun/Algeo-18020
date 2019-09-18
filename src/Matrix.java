@@ -321,19 +321,23 @@ public class Matrix{
             Matrix b = this.getCoeffMatrix();
             if (b.detGauss() == 0) {
                 System.out.println("Matriks ini determinan 0, tidak bisa ditentukan dengan metode Crammer");
+                System.out.println("Silahkan mencoba metode lain");
+
             } else {
-            Matrix a = this.getLastCol();
-            for (int j = 1 ; j<= b.cols; j ++) {
-                Matrix smtr = b.duplicateMatrix();
-                for (int i = 1 ; i<= b.rows ; i ++) {
-                    smtr.setElmt(i, j, a.getElmt(i, 1));
+                Matrix a = this.getLastCol();
+                for (int j = 1 ; j<= b.cols; j ++) {
+                    Matrix smtr = b.duplicateMatrix();
+                    for (int i = 1 ; i<= b.rows ; i ++) {
+                        smtr.setElmt(i, j, a.getElmt(i, 1));
                         
                     }
                     this.Solution[j] = smtr.detGauss() / b.detGauss(); 
                 }
+                this.printSolution();
+            
             }
-            this.printSolution();
         }
+
     }
     
 
@@ -382,7 +386,6 @@ public class Matrix{
                 if (k != 0) m.addRow(r, pivot, -k);
             }
         }
-        m.scalar *= this.scalar;
         return m;
     }
 
