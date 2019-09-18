@@ -144,11 +144,14 @@ public class Matrix{
             }
         }
 
-        if (useKeyboard == 1) this.rows = input.nextInt();
-        this.cols = this.rows+1;
-        this.TabInt = new double[this.rows+5][this.cols+5];
-        this.Solution = new double[this.rows+5];
-        this.inputInterpolationData(input);
+        if (useKeyboard == 1) {
+            System.out.print("Berapa banyak titik yang Anda ingin masukkan? ");
+            this.rows = input.nextInt();
+            this.cols = this.rows+1;
+            this.TabInt = new double[this.rows+5][this.cols+5];
+            this.Solution = new double[this.rows+5];
+            this.inputInterpolationData(input);
+        }
     }
 
     // ================================= Elementary Row Operation ================================= //
@@ -490,6 +493,7 @@ public class Matrix{
     public double valueFunction(Scanner input) {
         double x;
         do{
+            System.out.print("Masukkan nilai x di dalam range yang ingin ditaksir: ");
             x = input.nextDouble();
             if((x<this.nilaiMinimum()) || (x>this.nilaiMaksimal())) {
                 System.out.println("Titik tidak di dalam range. Silakan ulangi.");
