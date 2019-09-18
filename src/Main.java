@@ -138,11 +138,12 @@ public class Main {
             } else if (choice == 6){
                 m.inputInterpolation(input);
                 m.interpolate();
+                m.valueFunction(input);
             }
 
             System.out.println();
             choice = getMenu();
         }
-        System.out.printf("Terima kasih!")
+        System.out.printf("Terima kasih!");
     }
 }

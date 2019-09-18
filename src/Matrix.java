@@ -384,6 +384,47 @@ public class Matrix{
         this.printSolution();
     }
 
+    public double nilaiMaksimal() {
+        double maks = this.getElmt(1,2);
+
+        for(int r=1; r<=this.rows; r++) {
+            if(maks < getElmt(r, 2)) {
+                maks = getElmt(r, 2);
+            }
+        }
+        
+        return maks;
+    }
+
+    public double nilaiMinimum() {
+        double min = this.getElmt(1, 2);
+
+        for(int r=1; r<=this.rows; r++) {
+            if(min > getElmt(r, 2)) {
+                min = getElmt(r, 2);
+            }
+        }
+
+        return min;
+    }
+
+    public double valueFunction(Scanner input) {
+        double x;
+        do{
+            x = input.nextDouble();
+            if((x<this.nilaiMinimum()) || (x>this.nilaiMaksimal())) {
+                System.out.println("Titik tidak di dalam range. Silakan ulangi.");
+            }
+        }while((x<this.nilaiMinimum()) || (x>this.nilaiMaksimal()));
+
+        double hasil = 0;
+        for(int c=1; c<=this.cols; c++) {
+            hasil+=this.Solution[c]*(Math.pow(x, c-1));
+        }
+
+        return hasil;
+    }
+
     // ================================== 3. BAGIAN MATRIKS NxN =================================== //
 
     // INVERS
