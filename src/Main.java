@@ -37,6 +37,17 @@ public class Main {
             if ((choice < 1) || (choice > 4))
                 System.out.println("Input tidak valid. Silakan ulangi!");
         } while ((choice < 1) || (choice > 4));
+
+        if (choice == 1){
+            System.out.println("Menggunakan metode eliminasi Gauss (EF):");
+        } else if (choice == 2){
+            System.out.println("Menggunakan metode eliminasi Gauss-Jordan (REF):");
+        } else if (choice == 3){
+            System.out.println("Menggunakan metode Matriks Balikan (invers):");
+        } else if (choice == 4){
+            System.out.println("Menggunakan metode Kaidah Cramer (determinan):");
+        }
+
         return choice;
     }
 
@@ -52,6 +63,15 @@ public class Main {
             if ((choice < 1) || (choice > 3))
                 System.out.println("Input tidak valid. Silakan ulangi!");
         } while ((choice < 1) || (choice > 3));
+
+        if (choice == 1){
+            System.out.println("Menggunakan metode eliminasi Gauss (EF):");
+        } else if (choice == 2){
+            System.out.println("Menggunakan metode eliminasi Gauss-Jordan (REF):");
+        } else if (choice == 3){
+            System.out.println("Menggunakan Metode Cramer:");
+        }
+
         return choice;
     }
 
@@ -66,6 +86,13 @@ public class Main {
             if((choice<1) || (choice>2))
                 System.out.println("Input tidak valid. Silakan ulangi!");
         }while((choice<1) || (choice>2));
+
+        if(choice == 1) {
+            System.out.println("Menggunakan metode eliminasi Gauss-Jordan (REF):");
+        } else if(choice == 2) {
+            System.out.println("Menggunakan Metode Crammer");
+        }
+
         return choice;
     }
 
@@ -82,16 +109,12 @@ public class Main {
                 m.inputMatrix(input, false);
                 int splchoice = getSPLMethod();
                 if (splchoice == 1){
-                    System.out.println("Menggunakan metode eliminasi Gauss (EF):");
                     m.splGauss();
                 } else if (splchoice == 2){
-                    System.out.println("Menggunakan metode eliminasi Gauss-Jordan (REF):");
                     m.splGaussJordan();
                 } else if (splchoice == 3){
-                    System.out.println("Menggunakan metode Matriks Balikan (invers):");
                     m.splInv();
                 } else if (splchoice == 4){
-                    System.out.println("Menggunakan metode Kaidah Cramer (determinan):");
                     m.splCram();
                 }
 
@@ -100,14 +123,11 @@ public class Main {
                 m.inputMatrix(input, true);
                 int detchoice = getDetMethod();
                 if (detchoice == 1){
-                    System.out.println("Menggunakan metode eliminasi Gauss (EF):");
-                    System.out.println(m.detGauss());
+                    m.detGauss();
                 } else if (detchoice == 2){
-                    System.out.println("Menggunakan metode eliminasi Gauss-Jordan (REF):");
-                    System.out.println(m.detGaussJordan());
+                    m.detGaussJordan();
                 } else if (detchoice == 3){
-                    System.out.println("Menggunakan Metode Cramer:");
-                    System.out.println(m.detCram());
+                    m.detCram();
                 }
             
             // Invers
@@ -115,10 +135,8 @@ public class Main {
                 m.inputMatrix(input, true);
                 int invchoice = getInvMethod();
                 if(invchoice == 1) {
-                    System.out.println("Menggunakan metode eliminasi Gauss-Jordan (REF):");
                     m.invGaussJordan();
                 } else if(invchoice == 2) {
-                    System.out.println("Menggunakan Metode Crammer");
                     m.invCram();
                 }
             
@@ -136,7 +154,7 @@ public class Main {
             } else if (choice == 6){
                 m.inputInterpolation(input);
                 m.interpolate();
-                m.valueFunction(input);
+                System.out.printf("Nilai y = %.4f",m.valueFunction(input));
             }
 
             System.out.println();
