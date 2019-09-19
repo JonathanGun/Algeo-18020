@@ -9,6 +9,9 @@ public class Matrix{
     private double scalar;
     private double[] Solution;
     private boolean isInterpolationMatrix;
+    private double[][] ref;
+    private double[][] ef;
+    private String[] SolutionString;
 
     // Constructor
     public Matrix(int r, int c){
@@ -16,7 +19,10 @@ public class Matrix{
         this.cols = c;
         this.scalar = 1;
         this.TabInt = new double[this.rows+5][this.cols+5];
+        this.ref = new double[this.rows+5][this.cols+5];
+        this.ef = new double[this.rows+5][this.cols+5];
         this.Solution = new double[this.cols+5];
+        this.SolutionString = new String[this.cols+5];
     }
 
     // Selector
@@ -447,6 +453,12 @@ public class Matrix{
                 }
             }
             System.out.println();
+        }
+    }
+
+    private void printSolutionString(){
+        for(int i = 1; i <= this.cols-1; i++){
+            System.out.println(this.SolutionString[i]);
         }
     }
 
