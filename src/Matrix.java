@@ -302,42 +302,56 @@ public class Matrix{
     public void splInv() {
         // AX = B, maka X = A^-1 B
         // A: getCoeffMatrix, B: getLastCol
-        if(this.detGauss() == 0){
-            System.out.println("Tidak bisa dicari matriks invers! Determinannya 0!");
-        } else {
-            Matrix a = this.getCoeffMatrix();
-            Matrix b = this.getLastCol();
-            a = a.invCramUtil();
-            Matrix x  = multMatrix(a, b);
-            for(int i = 1; i <= this.cols; i++){
-                this.Solution[i] = x.getElmt(i, 1);
+        if(this.isSquareMatrix()) {
+            if(this.detGauss() == 0){
+                System.out.println("Tidak bisa dicari matriks invers! Determinannya 0!");
+            } else {
+                Matrix a = this.getCoeffMatrix();
+                Matrix b = this.getLastCol();
+                a = a.invCramUtil();
+                Matrix x  = multMatrix(a, b);
+                for(int i = 1; i <= this.cols; i++){
+                    this.Solution[i] = x.getElmt(i, 1);
+                }
+                this.printSolution();
             }
-            this.printSolution();
+        }
+        else{
+            System.out.println("Tidak bisa dicari solusinya dengan metode ini karena tidak bisa didapat inversnya!");
+            System.out.println("Silakan coba metode lain.");
         }
     }
 
 
     public void splCram(){
         // yang ditukar kolom i dengan kolom terakhir (manfaatkan getlastcol)
-        if (this.hasSolution()) {
-            Matrix b = this.getCoeffMatrix();
-            if (b.detGauss() == 0) {
-                System.out.println("Matriks ini determinan 0, tidak bisa ditentukan dengan metode Crammer");
-                System.out.println("Silahkan mencoba metode lain");
+        if(this.isSquareMatrix()) {
+            if (this.hasSolution()) {
+                Matrix b = this.getCoeffMatrix();
+                if (b.detGauss() == 0) {
+                    System.out.println("Matriks ini determinan 0, tidak bisa ditentukan dengan metode Crammer");
+                    System.out.println("Silahkan mencoba metode lain");
 
-            } else {
-                Matrix a = this.getLastCol();
-                for (int j = 1 ; j<= b.cols; j ++) {
-                    Matrix smtr = b.duplicateMatrix();
-                    for (int i = 1 ; i<= b.rows ; i ++) {
-                        smtr.setElmt(i, j, a.getElmt(i, 1));
+                } else {
+                    Matrix a = this.getLastCol();
+                    for (int j = 1 ; j<= b.cols; j ++) {
+                        Matrix smtr = b.duplicateMatrix();
+                        for (int i = 1 ; i<= b.rows ; i ++) {
+                            smtr.setElmt(i, j, a.getElmt(i, 1));
                         
+                        }
+                        this.Solution[j] = smtr.detGauss() / b.detGauss(); 
                     }
-                    this.Solution[j] = smtr.detGauss() / b.detGauss(); 
+                    Matrix ans = this.duplicateMatrix();
+                    ans.getSolution();
+                    this.Solution = ans.Solution;
+                    ans.printSolution();
                 }
-                this.printSolution();
-            
             }
+        }
+        else{
+            System.out.println("Tidak bisa dicari solusinya dengan metode ini karena matriks tidak berbentuk persegi!");
+            System.out.println("Silakan coba metode lain.");
         }
 
     }
