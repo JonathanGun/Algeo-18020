@@ -306,14 +306,13 @@ public class Matrix{
             if(this.detGauss() == 0){
                 System.out.println("Tidak bisa dicari matriks invers! Determinannya 0!");
             } else {
-                Matrix a = this.getCoeffMatrix();
+                Matrix a = this.duplicateMatrix();
                 Matrix b = this.getLastCol();
                 a = a.invCramUtil();
-                Matrix x  = multMatrix(a, b);
-                for(int i = 1; i <= this.cols; i++){
-                    this.Solution[i] = x.getElmt(i, 1);
+                Matrix ans = multMatrix(a,b);
+                for(int r = 1; r <= this.rows; r++){
+                    System.out.printf("X%d = %.4f\n", r, ans.getElmt(r, 1));
                 }
-                this.printSolution();
             }
         }
         else{
@@ -582,8 +581,8 @@ public class Matrix{
 
     private Matrix invCramUtil(){
         // 1/det * adjoin
-        Matrix answ = this.duplicateMatrix();
-        double x = answ.detGauss();
+        Matrix answ = this.duplicateMatrix().getCoeffMatrix();
+        double x = answ.detCramUtil();
         if (x == 0){
             answ.setElmt(1, 1, Double.NaN);
             return answ;
@@ -642,20 +641,20 @@ public class Matrix{
 
     // Cofactor
     public void cofactor(){
-        this.getCofactor()
+        this.getCoeffMatrix()
+            .getCofactor()
             .print();
     }
 
     private Matrix getCofactor(){
-        Matrix answ = this.duplicateMatrix()
-                          .getCoeffMatrix();
+        Matrix answ = this.duplicateMatrix();
 
         Matrix newm;
         for(int r = 1; r <= answ.rows; r++){
             for(int c = 1; c <= answ.cols; c++){
                 newm = this.duplicateMatrix();
                 newm = newm.reduce(r, c);
-                double det = newm.detCram() * Math.pow(-1, r+c);
+                double det = newm.detCramUtil() * Math.pow(-1, r+c);
                 answ.setElmt(r, c, det);
             }
         }
@@ -669,8 +668,6 @@ public class Matrix{
     }
 
     public Matrix getAdjoin(){
-        return this.duplicateMatrix()
-                   .getCofactor()
-                   .transpose();
+        return this.duplicateMatrix().getCofactor().transpose();
     }
 }
