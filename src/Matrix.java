@@ -118,7 +118,8 @@ public class Matrix{
         }
 
         this.tabInt = new double[this.rows+5][this.cols+5];
-        this.solution = new double[this.rows+5];
+        this.solution = new double[this.cols+5];
+        this.solutionString = new String[this.cols+5];
         this.inputElements(input);
     }
 
@@ -152,7 +153,8 @@ public class Matrix{
         }
         this.cols = this.rows+1;
         this.tabInt = new double[this.rows+5][this.cols+5];
-        this.solution = new double[this.rows+5];
+        this.solution = new double[this.cols+5];
+        this.solutionString = new String[this.cols+5];
         this.inputInterpolationData(input);
     }
 
@@ -298,6 +300,7 @@ public class Matrix{
         if (!ans.hasSolution()) System.out.println("Tidak ada solusi");
         else {
             ans.getSolution();
+            System.out.println(ans.solutionString.length);
             this.solution = ans.solution;
             ans.printSolution();
             this.solutionString = ans.solutionString;
@@ -427,7 +430,7 @@ public class Matrix{
         Vector<Integer> freeVar = new Vector<>();
         for(int c = this.cols-1; c > this.rows; c--){
             freeVar.add(c);
-            this.solutionString[c] = String.format("X%d = %c\n", c, 'a'+freeVar.size()-1);
+            this.solutionString[c] = String.format("X%d = %c", c, 'a'+freeVar.size()-1);
         }
         for(int r = this.rows; r >= 1; r--){
             String tmp = String.format("X%d = ", r);
