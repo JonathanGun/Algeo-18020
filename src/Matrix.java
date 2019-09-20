@@ -153,11 +153,11 @@ public class Matrix{
         if (useKeyboard == 1) {
             System.out.print("Berapa banyak titik yang Anda ingin masukkan? ");
             this.rows = input.nextInt();
-            this.cols = this.rows+1;
-            this.tabInt = new double[this.rows+5][this.cols+5];
-            this.solution = new double[this.rows+5];
-            this.inputInterpolationData(input);
         }
+        this.cols = this.rows+1;
+        this.tabInt = new double[this.rows+5][this.cols+5];
+        this.solution = new double[this.rows+5];
+        this.inputInterpolationData(input);
     }
 
     // ================================= Elementary Row Operation ================================= //
@@ -335,6 +335,7 @@ public class Matrix{
             if(this.detGauss() == 0){
                 System.out.println("Tidak bisa dicari matriks invers! Determinannya 0!");
             } else {
+                this.print();
                 Matrix a = this.duplicateMatrix();
                 Matrix b = this.getLastCol();
                 a = a.invCramUtil();
@@ -356,27 +357,24 @@ public class Matrix{
         // yang ditukar kolom i dengan kolom terakhir (manfaatkan getlastcol)
         if(this.isSquareMatrix()) {
             if (this.hasSolution()) {
-                Matrix b = this.getCoeffMatrix();
-                if (b.detGauss() == 0) {
+                double denom = this.detGauss();
+                if (denom == 0) {
                     System.out.println("Matriks ini determinan 0, tidak bisa ditentukan dengan metode Crammer");
                     System.out.println("Silahkan mencoba metode lain");
 
                 } else {
                     Matrix a = this.getLastCol();
-                    for (int j = 1 ; j<= b.cols; j ++) {
-                        Matrix smtr = b.duplicateMatrix();
-                        for (int i = 1 ; i<= b.rows ; i ++) {
-                            smtr.setElmt(i, j, a.getElmt(i, 1));
-                        
+                    for (int c = 1 ; c <= this.cols; c++) {
+                        Matrix ans = this.duplicateMatrix();
+                        for (int r = 1 ; r <= this.rows ; r++) {
+                            ans.setElmt(r, c, a.getElmt(r, 1));
                         }
-                        this.solution[j] = smtr.detGauss() / b.detGauss(); 
+                        this.solutionString[c] = String.format("X%d = %.4f", c, ans.detGauss() / denom);
                     }
-                   
                     this.printSolutionString();
                 }
             }
-        }
-        else{
+        } else{
             System.out.println("Tidak bisa dicari solusinya dengan metode ini karena matriks tidak berbentuk persegi!");
             System.out.println("Silakan coba metode lain.");
         }
@@ -467,7 +465,7 @@ public class Matrix{
                         this.solution[r] -= this.getElmt(r, c)*this.solution[c];
                     }
                 }
-                tmp += String.format("%f ", this.solution[r]);
+                tmp += String.format("%.4f ", this.solution[r]);
                 for(int i = 0; i <= freeVar.size()-1; i++){
                     double x = this.getElmt(r, freeVar.get(i));
                     if(x < 0) tmp += String.format("+ %.2f%c ", -x, 'a'+i);
@@ -518,23 +516,20 @@ public class Matrix{
 
     private void printSolutionInterpolation() {
         System.out.print("f(x) = ");
-        for(int i=1; i<=this.cols; i++) {
-            if(this.solution[i]==0) {
+        for(int i = 1; i <= this.cols; i++) {
+            if(this.solution[i] == 0) {
                 i++;
-            } else if(i==1) {
-                System.out.printf("%.4f",this.solution[i]);
+            } else if(i == 1) {
+                System.out.printf("%.4f ", this.solution[i]);
             } else {
-                if(this.solution[i]>0) {
-                    System.out.print("+");
-                }
-                System.out.printf("%.4fx",this.solution[i]);
-                if(i>2){
-                    System.out.printf("^%d",i-1);
-                }
+                if(this.solution[i] > 0) System.out.printf("+ %.4f",this.solution[i]);
+                else System.out.printf("- %.4f",-this.solution[i]);
+
+                if(i == 2) System.out.print("x");
+                else System.out.printf("x^%d", i - 1);
             }
         }
         System.out.println();
-
     }
 
     public double valueFunction(Scanner input) {
@@ -574,32 +569,32 @@ public class Matrix{
         Matrix m = this.duplicateMatrix()
                        .getCoeffMatrix();
 
-        // copy m ke answtemp untuk di OBE
-        Matrix answtemp = new Matrix(m.rows, 2*m.cols);
+        // copy m ke anstemp untuk di OBE
+        Matrix anstemp = new Matrix(m.rows, 2*m.cols);
         for(int r = 1; r <= m.rows; r++){
             for(int c = 1; c <= m.cols; c++){
-                answtemp.setElmt(r, c, m.getElmt(r, c));
+                anstemp.setElmt(r, c, m.getElmt(r, c));
             }
         }
 
         // copy matriks identitas di sblh kanannya
-        for(int r = 1; r <= answtemp.rows; r++) {
-            for(int c = (answtemp.cols/2) + 1; c <= answtemp.cols; c++) {
-                if(r + (answtemp.cols/2) == c) answtemp.setElmt(r, c, 1);
-                else answtemp.setElmt(r, c, 0);
+        for(int r = 1; r <= anstemp.rows; r++) {
+            for(int c = (anstemp.cols/2) + 1; c <= anstemp.cols; c++) {
+                if(r + (anstemp.cols/2) == c) anstemp.setElmt(r, c, 1);
+                else anstemp.setElmt(r, c, 0);
             }
         }
-        answtemp = answtemp.gaussJordanElim();
+        anstemp = anstemp.gaussJordanElim();
         
         // copy ke matriks jawaban
-        Matrix answ = new Matrix(m.rows, m.cols);
-        for(int r = 1; r <= answ.rows; r++) {
-            for(int c = 1; c <= answ.cols; c++) {
-                double a = answtemp.getElmt(r, c + (answtemp.cols/2));
-                answ.setElmt(r, c, a);
+        Matrix ans = new Matrix(m.rows, m.cols);
+        for(int r = 1; r <= ans.rows; r++) {
+            for(int c = 1; c <= ans.cols; c++) {
+                double a = anstemp.getElmt(r, c + (anstemp.cols/2));
+                ans.setElmt(r, c, a);
             }
         }
-        return answ;
+        return ans;
     }
 
     // Cramer
@@ -615,20 +610,20 @@ public class Matrix{
 
     private Matrix invCramUtil(){
         // 1/det * adjoin
-        Matrix answ = this.duplicateMatrix().getCoeffMatrix();
-        double x = answ.detCramUtil();
+        Matrix ans = this.duplicateMatrix().getCoeffMatrix();
+        double x = ans.detCramUtil();
         if (x == 0){
-            answ.setElmt(1, 1, Double.NaN);
-            return answ;
+            ans.setElmt(1, 1, Double.NaN);
+            return ans;
         }
 
-        answ = answ.getAdjoin();
+        ans = ans.getAdjoin();
         for(int r = 1; r <= this.rows; r++) {
             for(int c = 1; c <= this.cols; c++) {
-                answ.tabInt[r][c] /= x;
+                ans.tabInt[r][c] /= x;
             }
         }
-        return answ;
+        return ans;
     }
 
     // DETERMINAN
@@ -681,27 +676,28 @@ public class Matrix{
     }
 
     private Matrix getCofactor(){
-        Matrix answ = this.duplicateMatrix();
+        Matrix ans = this.duplicateMatrix();
 
         Matrix newm;
-        for(int r = 1; r <= answ.rows; r++){
-            for(int c = 1; c <= answ.cols; c++){
+        for(int r = 1; r <= ans.rows; r++){
+            for(int c = 1; c <= ans.cols; c++){
                 newm = this.duplicateMatrix();
                 newm = newm.reduce(r, c);
                 double det = newm.detCramUtil() * Math.pow(-1, r+c);
-                answ.setElmt(r, c, det);
+                ans.setElmt(r, c, det);
             }
         }
-        return answ;
+        return ans;
     }
 
     // Adjoin (Cofactor transpose)
     public void adjoin(){
-        this.getAdjoin()
+        this.getCoeffMatrix()
+            .getAdjoin()
             .print();
     }
 
     public Matrix getAdjoin(){
-        return this.duplicateMatrix().getCoeffMatrix().getCofactor().transpose();
+        return this.duplicateMatrix().getCofactor().transpose();
     }
 }
