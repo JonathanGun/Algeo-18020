@@ -489,6 +489,12 @@ public class Matrix{
     // ================================== 2. BAGIAN INTERPOLASI ==================================== //
     public void interpolate(Scanner input){
         Matrix ans = this.gaussJordanElim();
+        for(int r = 1; r <= ans.rows; r++) {
+            if(!ans.isValidRow(r)) {
+                reduce(r,this.cols-1);
+            }
+        }
+
         if (!ans.hasSolution()) System.out.println("Solusi interpolasi tidak dapat ditemukan");
         else {
             Matrix sol = ans.getLastCol();
