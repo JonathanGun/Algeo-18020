@@ -402,7 +402,7 @@ public class Matrix{
             }
 
             // ubah elmt ke-pivot menjadi 1, agar menjadi echelon form
-            m.scaleRow(pivot, 1 / m.getElmt(pivot, pivot));
+            m.scaleRow(pivot, 1 / m.getElmt(pivot, c));
         }
         m.scalar *= this.scalar;
         return m;
