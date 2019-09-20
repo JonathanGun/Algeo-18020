@@ -2,6 +2,8 @@ import java.util.Scanner;
 import java.util.Vector;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 public class Matrix{
     private double[][] tabInt;
@@ -50,6 +52,27 @@ public class Matrix{
     private void printInterpolationData(){
         for(int r = 1; r <= this.rows; r++){
             System.out.printf("%.5f %.5f\n",this.getElmt(r, 2), this.getElmt(r, this.cols));
+        }
+    }
+
+    public void outputFile(Scanner input) {
+        System.out.print("Apakah hasil ini ingin disimpan ke dalam file? (0/1)\n");
+        int save = input.nextInt();
+        if(save == 1) {
+            System.out.println("Masukkan nama file+extension: ");
+            String fileName = input.next();
+            try{
+                File file = new File ("../test/output/" + fileName);
+
+                if(!file.exists()) {
+                    file.createNewFile();
+                }
+                else{
+                    System.out.println("File sudah ada!");
+                }
+            }catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -338,7 +361,7 @@ public class Matrix{
                 double denom = this.detGauss();
                 if (denom == 0) {
                     System.out.println("Matriks ini determinan 0, tidak bisa ditentukan dengan metode Crammer");
-                    System.out.println("Silahkan mencoba metode lain");
+                    System.out.println("Silakan mencoba metode lain");
                 } else {
                     Matrix a = this.getLastCol();
                     for (int c = 1 ; c <= this.cols; c++) {
