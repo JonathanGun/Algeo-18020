@@ -371,10 +371,8 @@ public class Matrix{
                         }
                         this.solution[j] = smtr.detGauss() / b.detGauss(); 
                     }
-                    Matrix ans = this.duplicateMatrix();
-                    ans.getSolution();
-                    this.solution = ans.solution;
-                    ans.printSolution();
+                   
+                    this.printSolutionString();
                 }
             }
         }
