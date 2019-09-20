@@ -157,6 +157,7 @@ public class Main {
             }
 
             System.out.println();
+            m.outputFile(input);
             choice = getMenu();
         }
         System.out.printf("Terima kasih!");
