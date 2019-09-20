@@ -9,8 +9,6 @@ public class Matrix{
     private double scalar;
     private double[] solution;
     private boolean isInterpolationMatrix;
-    private double[][] ref;
-    private double[][] ef;
     private String[] solutionString;
 
     // Constructor
@@ -19,8 +17,6 @@ public class Matrix{
         this.cols   = c;
         this.scalar = 1;
         this.tabInt = new double[this.rows+5][this.cols+5];
-        this.ref    = new double[this.rows+5][this.cols+5];
-        this.ef     = new double[this.rows+5][this.cols+5];
         this.solution       = new double[this.cols+5];
         this.solutionString = new String[this.cols+5];
     }
@@ -210,8 +206,6 @@ public class Matrix{
         m.scalar = this.scalar;
         m.solution = this.solution;
         m.solutionString = this.solutionString;
-        m.ref = this.ref;
-        m.ef = this.ef;
         m.isInterpolationMatrix = this.isInterpolationMatrix;
         for(int r = 1; r <= this.rows; r++){
             for(int c = 1; c <= this.cols; c++){
@@ -281,22 +275,6 @@ public class Matrix{
         return true;
     }
 
-    private void fillEF(Matrix m){
-        for(int r = 1; r <= m.rows; r++){
-            for(int c = 1; c <= m.cols; c++){
-                this.ef[r][c] = m.getElmt(r, c);
-            }
-        }
-    }
-
-    private void fillREF(Matrix m){
-        for(int r = 1; r <= m.rows; r++){
-            for(int c = 1; c <= m.cols; c++){
-                this.ref[r][c] = m.getElmt(r, c);
-            }
-        }
-    }
-
     // ====================================== 1. BAGIAN SPL ========================================== //
 
     public void splGauss(){
@@ -361,7 +339,6 @@ public class Matrix{
                 if (denom == 0) {
                     System.out.println("Matriks ini determinan 0, tidak bisa ditentukan dengan metode Crammer");
                     System.out.println("Silahkan mencoba metode lain");
-
                 } else {
                     Matrix a = this.getLastCol();
                     for (int c = 1 ; c <= this.cols; c++) {
@@ -411,7 +388,6 @@ public class Matrix{
             m.scaleRow(pivot, 1/m.getElmt(pivot, pivot));
         }
         m.scalar *= this.scalar;
-        this.fillEF(m);
         return m;
     }
 
@@ -427,7 +403,6 @@ public class Matrix{
                 if (k != 0) m.addRow(r, pivot, -k);
             }
         }
-        this.fillREF(m);
         return m;
     }
 
@@ -483,14 +458,25 @@ public class Matrix{
     }
 
     // ================================== 2. BAGIAN INTERPOLASI ==================================== //
-    public void interpolate(){
+    public void interpolate(Scanner input){
         Matrix ans = this.gaussJordanElim();
         ans.getSolution();
         this.solution = ans.solution;
-        this.printSolutionInterpolation();
+        if (this.canInterpolate()) System.out.println("Solusi interpolasi tidak dapat ditemukan");
+        else {
+            this.printSolutionInterpolation();
+            System.out.printf("Nilai y = %.4f", this.valueFunction(input));
+        }
     }
 
-    public double nilaiMaksimal() {
+    private boolean canInterpolate(){
+        for(int i = 1; i <= this.cols-1; i++){
+            if(Double.isInfinite(this.solution[i])) return false;
+        }
+        return true;
+    }
+
+    private double nilaiMaksimal() {
         double maks = this.getElmt(1,2);
 
         for(int r=1; r<=this.rows; r++) {
@@ -502,7 +488,7 @@ public class Matrix{
         return maks;
     }
 
-    public double nilaiMinimum() {
+    private double nilaiMinimum() {
         double min = this.getElmt(1, 2);
 
         for(int r=1; r<=this.rows; r++) {
@@ -522,8 +508,8 @@ public class Matrix{
             } else if(i == 1) {
                 System.out.printf("%.4f ", this.solution[i]);
             } else {
-                if(this.solution[i] > 0) System.out.printf("+ %.4f",this.solution[i]);
-                else System.out.printf("- %.4f",-this.solution[i]);
+                if(this.solution[i] > 0) System.out.printf("+ %.4f", this.solution[i]);
+                else System.out.printf("- %.4f", -this.solution[i]);
 
                 if(i == 2) System.out.print("x");
                 else System.out.printf("x^%d", i - 1);

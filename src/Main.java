@@ -153,8 +153,7 @@ public class Main {
             // Interpolation
             } else if (choice == 6){
                 m.inputInterpolation(input);
-                m.interpolate();
-                System.out.printf("Nilai y = %.4f", m.valueFunction(input));
+                m.interpolate(input);
             }
 
             System.out.println();
