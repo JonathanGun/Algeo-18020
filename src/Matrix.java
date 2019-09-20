@@ -4,35 +4,35 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 public class Matrix{
-    private double[][] TabInt;
+    private double[][] tabInt;
     private int rows, cols;
     private double scalar;
-    private double[] Solution;
+    private double[] solution;
     private boolean isInterpolationMatrix;
     private double[][] ref;
     private double[][] ef;
-    private String[] SolutionString;
+    private String[] solutionString;
 
     // Constructor
     public Matrix(int r, int c){
-        this.rows = r;
-        this.cols = c;
+        this.rows   = r;
+        this.cols   = c;
         this.scalar = 1;
-        this.TabInt = new double[this.rows+5][this.cols+5];
-        this.ref = new double[this.rows+5][this.cols+5];
-        this.ef = new double[this.rows+5][this.cols+5];
-        this.Solution = new double[this.cols+5];
-        this.SolutionString = new String[this.cols+5];
+        this.tabInt = new double[this.rows+5][this.cols+5];
+        this.ref    = new double[this.rows+5][this.cols+5];
+        this.ef     = new double[this.rows+5][this.cols+5];
+        this.solution       = new double[this.cols+5];
+        this.solutionString = new String[this.cols+5];
     }
 
     // Selector
     private double getElmt(int r, int c){
-        return this.TabInt[r][c];
+        return this.tabInt[r][c];
     }
 
     // Setter
     private void setElmt(int r, int c, double x){
-        this.TabInt[r][c] = x;
+        this.tabInt[r][c] = x;
     }
 
     // I/O
@@ -121,8 +121,8 @@ public class Matrix{
             }
         }
 
-        this.TabInt = new double[this.rows+5][this.cols+5];
-        this.Solution = new double[this.rows+5];
+        this.tabInt = new double[this.rows+5][this.cols+5];
+        this.solution = new double[this.rows+5];
         this.inputElements(input);
     }
 
@@ -154,8 +154,8 @@ public class Matrix{
             System.out.print("Berapa banyak titik yang Anda ingin masukkan? ");
             this.rows = input.nextInt();
             this.cols = this.rows+1;
-            this.TabInt = new double[this.rows+5][this.cols+5];
-            this.Solution = new double[this.rows+5];
+            this.tabInt = new double[this.rows+5][this.cols+5];
+            this.solution = new double[this.rows+5];
             this.inputInterpolationData(input);
         }
     }
@@ -175,14 +175,14 @@ public class Matrix{
     private void scaleRow(int r, double k){
         this.scalar /= k;
         for(int c = r; c <= this.cols; c++){
-            this.TabInt[r][c] *= k;
+            this.tabInt[r][c] *= k;
         }
     }
 
     // Add Row
     private void addRow(int r1, int r2, double k){
         for(int c = 1; c <= this.cols; c++){
-            this.TabInt[r1][c] += k*this.getElmt(r2, c);
+            this.tabInt[r1][c] += k*this.getElmt(r2, c);
         }
     }
 
@@ -206,51 +206,56 @@ public class Matrix{
     }
 
     private Matrix duplicateMatrix(){
-        Matrix newm = new Matrix(this.rows, this.cols);
-        newm.scalar = this.scalar;
-        newm.Solution = this.Solution;
+        Matrix m = new Matrix(this.rows, this.cols);
+        m.scalar = this.scalar;
+        m.solution = this.solution;
+        m.solutionString = this.solutionString;
+        m.ref = this.ref;
+        m.ef = this.ef;
+        m.isInterpolationMatrix = this.isInterpolationMatrix;
         for(int r = 1; r <= this.rows; r++){
             for(int c = 1; c <= this.cols; c++){
-                newm.setElmt(r, c, this.getElmt(r, c));
+                m.setElmt(r, c, this.getElmt(r, c));
             }
         }
-        return newm;
+        return m;
     }
 
     private Matrix reduce(int rx, int cx){
-        Matrix newm = this.duplicateMatrix();
+        Matrix m = this.duplicateMatrix();
         for(int r = 1; r <= this.rows; r++){
             for(int c = 1; c <= this.cols; c++){
                 int newr = r, newc = c;
                 if (r > rx) newr--;
                 if (c > cx) newc--;
-                newm.setElmt(newr, newc, this.getElmt(r, c));
+                m.setElmt(newr, newc, this.getElmt(r, c));
             }
         }
-        newm.cols--;
-        newm.rows--;
-        return newm;
+        m.cols--;
+        m.rows--;
+        return m;
     }
 
     private Matrix transpose(){
-        Matrix newm = new Matrix(this.cols, this.rows);
-        for(int r = 1; r <= newm.rows; r++){
-            for(int c = 1; c <= newm.cols; c++){
-                newm.setElmt(r, c, this.getElmt(c, r));
+        Matrix m = this.duplicateMatrix();
+        for(int r = 1; r <= m.rows; r++){
+            for(int c = 1; c <= m.cols; c++){
+                m.setElmt(r, c, this.getElmt(c, r));
             }
         }
-        return newm;
+        return m;
     }
 
     private boolean isValidRow(int r){
         for(int c = 1; c < this.cols; c++){
             if (this.getElmt(r, c) != 0) return true;
         }
-        return this.getElmt(r, this.cols) == 0;
+        return (this.getElmt(r, this.cols) == 0);
     }
 
     private Matrix multMatrix(Matrix m1, Matrix m2) {
         Matrix ans = new Matrix(m1.rows, m2.cols);
+        ans.isInterpolationMatrix = false;
 
         if (m1.cols != m2.rows){
             System.out.println("Tidak ada solusi");
@@ -259,7 +264,7 @@ public class Matrix{
                 for(int c2 = 1; c2 <= m2.cols; c2++ ) {
                     ans.setElmt(r1, c2, 0);
                     for(int r2 = 1; r2 <= m2.rows; r2++) {
-                        ans.TabInt[r1][c2] += m1.getElmt(r1, r2) * m2.getElmt(r2, c2);
+                        ans.tabInt[r1][c2] += m1.getElmt(r1, r2) * m2.getElmt(r2, c2);
                     }
                 }
             }
@@ -271,11 +276,25 @@ public class Matrix{
         Matrix m = this.duplicateMatrix();
         m.gaussElim();
         for(int r = 1; r <= m.rows; r++){
-            if (!m.isValidRow(r)){
-                return false;
-            }
+            if (!m.isValidRow(r)) return false;
         }
         return true;
+    }
+
+    private void fillEF(Matrix m){
+        for(int r = 1; r <= m.rows; r++){
+            for(int c = 1; c <= m.cols; c++){
+                this.ef[r][c] = m.getElmt(r, c);
+            }
+        }
+    }
+
+    private void fillREF(Matrix m){
+        for(int r = 1; r <= m.rows; r++){
+            for(int c = 1; c <= m.cols; c++){
+                this.ref[r][c] = m.getElmt(r, c);
+            }
+        }
     }
 
     // ====================================== 1. BAGIAN SPL ========================================== //
@@ -287,8 +306,10 @@ public class Matrix{
         if (!ans.hasSolution()) System.out.println("Tidak ada solusi");
         else {
             ans.getSolution();
-            this.Solution = ans.Solution;
+            this.solution = ans.solution;
             ans.printSolution();
+            this.solutionString = ans.solutionString;
+            ans.printSolutionString();
         }
     }
 
@@ -299,8 +320,10 @@ public class Matrix{
         if (!ans.hasSolution()) System.out.println("Tidak ada solusi");
         else {
             ans.getSolution();
-            this.Solution = ans.Solution;
+            this.solution = ans.solution;
             ans.printSolution();
+            this.solutionString = ans.solutionString;
+            ans.printSolutionString();
         }
     }
 
@@ -317,8 +340,9 @@ public class Matrix{
                 a = a.invCramUtil();
                 Matrix ans = multMatrix(a,b);
                 for(int r = 1; r <= this.rows; r++){
-                    System.out.printf("X%d = %.4f\n", r, ans.getElmt(r, 1));
+                    this.solutionString[r] = String.format("X%d = %.4f", r, ans.getElmt(r, 1));
                 }
+                this.printSolutionString();
             }
         }
         else{
@@ -345,11 +369,11 @@ public class Matrix{
                             smtr.setElmt(i, j, a.getElmt(i, 1));
                         
                         }
-                        this.Solution[j] = smtr.detGauss() / b.detGauss(); 
+                        this.solution[j] = smtr.detGauss() / b.detGauss(); 
                     }
                     Matrix ans = this.duplicateMatrix();
                     ans.getSolution();
-                    this.Solution = ans.Solution;
+                    this.solution = ans.solution;
                     ans.printSolution();
                 }
             }
@@ -366,7 +390,6 @@ public class Matrix{
     // Gauss
     private Matrix gaussElim(){
         Matrix m = this.duplicateMatrix();
-        // Kasus normal (ada 1 solusi) : ukuran matriks NxN
         for (int pivot = 1; pivot <= m.rows; pivot++){
             // cek ElmtDiag ke-pivot, jika 0 tukar dengan yg tidak 0
             if (m.getElmt(pivot, pivot) == 0){
@@ -392,6 +415,7 @@ public class Matrix{
             m.scaleRow(pivot, 1/m.getElmt(pivot, pivot));
         }
         m.scalar *= this.scalar;
+        this.fillEF(m);
         return m;
     }
 
@@ -407,6 +431,7 @@ public class Matrix{
                 if (k != 0) m.addRow(r, pivot, -k);
             }
         }
+        this.fillREF(m);
         return m;
     }
 
@@ -419,10 +444,10 @@ public class Matrix{
     // Operasi lain
     private void getSolution(){
         for(int r = this.rows; r >= 1; r--){
-            this.Solution[r] = this.getElmt(r, this.cols)/this.getElmt(r, r);
+            this.solution[r] = this.getElmt(r, this.cols)/this.getElmt(r, r);
         }
         for(int c = this.rows+1; c <= this.cols-1; c++){
-            this.Solution[c] = 0.0/0.0;
+            this.solution[c] = 0.0/0.0;
         }
     }
 
@@ -430,35 +455,34 @@ public class Matrix{
         System.out.println("Solusi dari matriks SPL:");
         Vector<Integer> freeVar = new Vector<>();
         for(int c = this.cols-1; c > this.rows; c--){
-            System.out.printf("X%d = ", c);
             freeVar.add(c);
-            System.out.printf("%c\n", 'a'+freeVar.size()-1);
+            this.solutionString[c] = String.format("X%d = %c\n", c, 'a'+freeVar.size()-1);
         }
         for(int r = this.rows; r >= 1; r--){
-            System.out.printf("X%d = ", r);
-            if(Double.isNaN(this.Solution[r])){
+            String tmp = String.format("X%d = ", r);
+            if(Double.isNaN(this.solution[r])){
                 freeVar.add(r);
-                System.out.printf("%c ", 'a'+freeVar.size()-1);
+                tmp += String.format("%c ", 'a'+freeVar.size()-1);
             } else {
                 for(int c = this.cols-1; c > r; c--){
                     if(this.getElmt(r, c) != 0){
-                        this.Solution[r] -= this.getElmt(r, c)*this.Solution[c];
+                        this.solution[r] -= this.getElmt(r, c)*this.solution[c];
                     }
                 }
-                System.out.printf("%f ", this.Solution[r]);
+                tmp += String.format("%f ", this.solution[r]);
                 for(int i = 0; i <= freeVar.size()-1; i++){
                     double x = this.getElmt(r, freeVar.get(i));
-                    if(x < 0) System.out.printf("+ %.2f%c ", -x, 'a'+i);
-                    if(x > 0) System.out.printf("- %.2f%c ", x, 'a'+i);
+                    if(x < 0) tmp += String.format("+ %.2f%c ", -x, 'a'+i);
+                    if(x > 0) tmp += String.format("- %.2f%c ", x, 'a'+i);
                 }
             }
-            System.out.println();
+            this.solutionString[r] = tmp;
         }
     }
 
     private void printSolutionString(){
         for(int i = 1; i <= this.cols-1; i++){
-            System.out.println(this.SolutionString[i]);
+            System.out.println(this.solutionString[i]);
         }
     }
 
@@ -466,7 +490,7 @@ public class Matrix{
     public void interpolate(){
         Matrix ans = this.gaussJordanElim();
         ans.getSolution();
-        this.Solution = ans.Solution;
+        this.solution = ans.solution;
         this.printSolutionInterpolation();
     }
 
@@ -497,15 +521,15 @@ public class Matrix{
     private void printSolutionInterpolation() {
         System.out.print("f(x) = ");
         for(int i=1; i<=this.cols; i++) {
-            if(this.Solution[i]==0) {
+            if(this.solution[i]==0) {
                 i++;
             } else if(i==1) {
-                System.out.printf("%.4f",this.Solution[i]);
+                System.out.printf("%.4f",this.solution[i]);
             } else {
-                if(this.Solution[i]>0) {
+                if(this.solution[i]>0) {
                     System.out.print("+");
                 }
-                System.out.printf("%.4fx",this.Solution[i]);
+                System.out.printf("%.4fx",this.solution[i]);
                 if(i>2){
                     System.out.printf("^%d",i-1);
                 }
@@ -527,7 +551,7 @@ public class Matrix{
 
         double hasil = 0;
         for(int c=1; c<=this.cols; c++) {
-            hasil+=this.Solution[c]*(Math.pow(x, c-1));
+            hasil+=this.solution[c]*(Math.pow(x, c-1));
         }
 
         return hasil;
@@ -603,7 +627,7 @@ public class Matrix{
         answ = answ.getAdjoin();
         for(int r = 1; r <= this.rows; r++) {
             for(int c = 1; c <= this.cols; c++) {
-                answ.TabInt[r][c] /= x;
+                answ.tabInt[r][c] /= x;
             }
         }
         return answ;
