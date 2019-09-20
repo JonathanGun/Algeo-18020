@@ -702,6 +702,6 @@ public class Matrix{
     }
 
     public Matrix getAdjoin(){
-        return this.duplicateMatrix().getCofactor().transpose();
+        return this.duplicateMatrix().getCoeffMatrix().getCofactor().transpose();
     }
 }
