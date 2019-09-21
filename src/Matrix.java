@@ -212,6 +212,14 @@ public class Matrix{
         return (this.rows+1 == this.cols);
     }
 
+    private boolean isAllZero(int r) {
+        int c = 1;
+        while((c<this.cols) && (this.getElmt(r, c)==0)) {
+            c+=1;
+        }
+        return(this.getElmt(r,this.cols)==0);
+    }
+
     private Matrix getCoeffMatrix(){
         Matrix m = this.duplicateMatrix();
         m.cols--;
@@ -490,7 +498,7 @@ public class Matrix{
     public void interpolate(Scanner input){
         Matrix ans = this.gaussJordanElim();
         for(int r = 1; r <= ans.rows; r++) {
-            if(!ans.isValidRow(r)) {
+            if(ans.isAllZero(r)) {
                 reduce(r,this.cols-1);
             }
         }
