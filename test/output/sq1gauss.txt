@@ -1,0 +1,9 @@
+Menggunakan metode eliminasi Gauss (EF):
+|1.00 1.00 1.00 1.00 |
+|0.00 1.00 -0.00 1.00 |
+|0.00 0.00 1.00 -0.67 |
+Solusi dari matriks SPL:
+X1 = 0.6667 
+X2 = 1 
+X3 = -0.6667 
+

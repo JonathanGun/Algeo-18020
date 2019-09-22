@@ -1,0 +1,6 @@
+f(x) = 0.6762x^0 + 0.2266x - 0.0064x^2 
+
+Masukkan nilai x antara 8.0 dan 9.5 untuk ditaksir nilai y-nya: Titik tidak di dalam range. Silakan ulangi.
+
+Masukkan nilai x antara 8.0 dan 9.5 untuk ditaksir nilai y-nya: Untuk x = 8.0000, nilai y = 2.0794
+

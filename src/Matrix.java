@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.FileWriter;
+import java.io.PrintStream;
 
 public class Matrix{
     // Variables
@@ -23,6 +24,9 @@ public class Matrix{
     // (480) Kelompok Eliminasi SPL - gaussElim, jordanElim, gaussJordanElim, getSPLsolution, constructSolutionMatrix, constructSolutionString
     // (606) Kelompok Interpolasi - interpolasi, estimaasi nilai Y
     // (643) Kelompok Matriks Bujur Sangkar (NxN) - invers(gaussJordan, Cramer), determinan(gaussJordan, Cramer), Cofactor, Adjoin
+
+    private PrintStream stdout = System.out;
+    private PrintStream fileout;
 
     // =========================================== Kelompok Primitif ========================================== //
     // Constructor
@@ -167,6 +171,7 @@ public class Matrix{
 
         this.reset(this.rows, this.cols);
         this.inputElements();
+        input = new Scanner(System.in);
     }
 
     // Interpolasi
@@ -220,6 +225,7 @@ public class Matrix{
 
         this.reset(this.rows, this.cols);
         this.inputInterpolationData();
+        input = new Scanner(System.in);
     }
 
     // == OUTPUT == //
@@ -266,50 +272,23 @@ public class Matrix{
     }
 
     // File
-    public void matriksOutputFile() {
+    public boolean outputFile() {
         System.out.print("Apakah hasil ini ingin disimpan ke dalam file? (0/1)\n");
         int save = input.nextInt();
         if(save == 1) {
             System.out.println("Masukkan nama file+extension: ");
             String fileName = input.next();
             try{
-                FileWriter file = new FileWriter ("../test/output/" + fileName);
-                String hsl = "";
-                for(int r=1; r<=this.rows; r++) {
-                    for(int c=1; c<=this.cols; c++) {
-                        hsl+=Double.toString(this.tabInt[r][c])+" ";
-                    }
-                    hsl = hsl+"\r\n";
-                }
-
-                for(int i=1; i<=hsl.length(); i++){
-                    file.write(hsl.charAt(i));
-                }
-            }catch (Exception e) {
-                System.out.println(e);
+                fileout = new PrintStream("../test/output/" + fileName);
+                System.out.println("File berhasil tersimpan dengan nama \"" + fileName +"\"!");
+                System.out.println("Silakan cek folder test/output/");
+                System.setOut(fileout);
+            } catch (Exception e){
+                System.out.println(e);  
             }
-        }
-    }
-
-    public void detOutputFile(double det) {
-        System.out.print("Apakah hasil ini ingin disimpan ke dalam file? (0/1)\n");
-        int save = input.nextInt();
-        if(save == 1) {
-            System.out.println("Masukkan nama file+extension: ");
-            String fileName = input.next();
-            try{
-                FileWriter file = new FileWriter ("../test/output/" + fileName);
-                String hsl = "";
-                for(int c=1; c<=this.cols; c++) {
-                    hsl+=Double.toString(det)+" ";
-                }
-
-                for(int i=1; i<=hsl.length(); i++){
-                    file.write(hsl.charAt(i));
-                }
-            }catch (Exception e) {
-                System.out.println(e);
-            }
+            return true;
+        } else {
+            return false;
         }
     }
     
@@ -454,7 +433,17 @@ public class Matrix{
     }
 
     // ====================================== 1. BAGIAN SPL ========================================== //
+    // Gauss
     public void splGauss(){
+        this.splGaussUtil();
+        if(this.outputFile()){
+            this.splGaussUtil();
+            System.setOut(stdout);
+        }
+    }
+
+    private void splGaussUtil(){
+        System.out.println("Menggunakan metode eliminasi Gauss (EF):");
         Matrix ans = this.duplicateMatrix()
                          .gaussElim();
         ans.print();
@@ -467,7 +456,17 @@ public class Matrix{
         System.out.println();
     }
 
+    // Gauss-Jordan
     public void splGaussJordan(){
+        this.splGaussJordanUtil();
+        if(this.outputFile()){
+            this.splGaussJordanUtil();
+            System.setOut(stdout);
+        }
+    }
+
+    private void splGaussJordanUtil(){
+        System.out.println("Menggunakan metode eliminasi Gauss-Jordan (REF):");
         Matrix ans = this.duplicateMatrix()
                          .gaussJordanElim();
         ans.print();
@@ -480,7 +479,17 @@ public class Matrix{
         System.out.println();
     }
 
-    public void splInv() {
+    // Invers
+    public void splInv(){
+        System.out.println("Menggunakan metode Matriks Balikan (invers):");
+        this.splInvUtil();
+        if(this.outputFile()){
+            this.splInvUtil();
+            System.setOut(stdout);
+        }
+    }
+
+    private void splInvUtil() {
         // AX = B, maka X = A^-1 B
         // A: getCoeffMatrix, B: getLastCol
         if(this.isSquareMatrix()) {
@@ -506,8 +515,17 @@ public class Matrix{
         System.out.println();
     }
 
-
+    // Cramer
     public void splCram(){
+        this.splCramUtil();
+        if(this.outputFile()){
+            this.splCramUtil();
+            System.setOut(stdout);
+        }
+    }
+
+    private void splCramUtil(){
+        System.out.println("Menggunakan metode Kaidah Cramer (determinan):");
         // Tukar kolom i dengan kolom terakhir
         if(this.isSquareMatrix()) {
             if (this.hasSolution()) {
@@ -663,6 +681,14 @@ public class Matrix{
 
     // ================================== 2. BAGIAN INTERPOLASI ==================================== //
     public void interpolate(){
+        this.interpolateUtil();
+        if(this.outputFile()){
+            this.interpolateUtil();
+            System.setOut(stdout);
+        }
+    }
+
+    private void interpolateUtil(){
         Matrix ans = this.gaussJordanElim();
         // Kasus input beberapa titik sama, jadikan 1 titik saja
         for(int r = 1; r <= ans.rows; r++) {
@@ -686,6 +712,7 @@ public class Matrix{
         double minX = this.minXInterpolation();
         double maxX = this.maxXInterpolation();
         do{
+            System.setOut(stdout);
             System.out.print("Masukkan nilai x antara " + minX + " dan " + maxX + " untuk ditaksir nilai y-nya: ");
             x = input.nextDouble();
             if((x < minX) || (x > maxX)) {
@@ -698,6 +725,10 @@ public class Matrix{
         for(int c = 1; c <= this.cols; c++) {
             hasil += sol.getElmt(c, 1) * (Math.pow(x, c-1));
         }
+        if(fileout != null) {
+            System.setOut(fileout);
+            fileout = null;
+        }
         System.out.printf("Untuk x = %.4f, ", x);
         return hasil;
     }
@@ -706,6 +737,15 @@ public class Matrix{
     // == INVERS == //
     // Gauss-Jordan
     public void invGaussJordan(){
+        this.invGaussJordanUt();
+        if(this.outputFile()){
+            this.invGaussJordanUt();
+            System.setOut(stdout);
+        }
+    }
+
+    private void invGaussJordanUt(){
+        System.out.println("Menggunakan metode eliminasi Gauss-Jordan (REF):");
         if (this.detGaussUtil() == 0){
             System.out.println("Tidak bisa dicari matriks invers! Determinannya 0!");
         } else {
@@ -751,6 +791,15 @@ public class Matrix{
 
     // Cramer
     public void invCram(){
+        this.invCramUt();
+        if(this.outputFile()){
+            this.invCramUt();
+            System.setOut(stdout);
+        }
+    }
+
+    private void invCramUt(){
+        System.out.println("Menggunakan Metode Crammer");
         if (this.detGaussUtil() == 0){
             System.out.println("Tidak bisa dicari matriks invers! Determinannya 0!");
         } else {
@@ -782,6 +831,15 @@ public class Matrix{
     // == DETERMINAN == //
     // Gauss
     public void detGauss(){
+        this.detGaussUt();
+        if(this.outputFile()){
+            this.detGaussUt();
+            System.setOut(stdout);
+        }
+    }
+
+    private void detGaussUt(){
+        System.out.println("Menggunakan metode eliminasi Gauss (EF):");
         System.out.println(formatAsFirstNum(prettify(this.detGaussUtil())));
         System.out.println();
     }
@@ -795,8 +853,17 @@ public class Matrix{
         return m.scalar;
     }
 
-    // Gauss Jordan 
+    // Gauss Jordan
     public void detGaussJordan(){
+        this.detGaussJordanUt();
+        if(this.outputFile()){
+            this.detGaussJordanUt();
+            System.setOut(stdout);
+        }
+    }
+
+    private void detGaussJordanUt(){
+        System.out.println("Menggunakan metode eliminasi Gauss-Jordan (REF):");
         System.out.println(formatAsFirstNum(prettify(this.detGaussJordanUtil())));
         System.out.println();
     }
@@ -812,6 +879,15 @@ public class Matrix{
 
     // Cramer
     public void detCram(){
+        this.detCramUt();
+        if(this.outputFile()){
+            this.detCramUt();
+            System.setOut(stdout);
+        }
+    }
+
+    private void detCramUt(){
+        System.out.println("Menggunakan Metode Cramer:");
         double det = this.duplicateMatrix()
                          .getCoeffMatrix()
                          .detCramUtil();
@@ -835,6 +911,14 @@ public class Matrix{
 
     // == COFACTOR == //
     public void cofactor(){
+        this.cofactorUt();
+        if(this.outputFile()){
+            this.cofactorUt();
+            System.setOut(stdout);
+        }
+    }
+
+    private void cofactorUt(){
         this.getCoeffMatrix()
             .cofactorUtil()
             .print();
@@ -858,6 +942,14 @@ public class Matrix{
 
     // == ADJOIN == //
     public void adjoin(){
+        this.adjoinUt();
+        if(this.outputFile()){
+            this.adjoinUt();
+            System.setOut(stdout);
+        }
+    }
+
+    private void adjoinUt(){
         this.getCoeffMatrix()
             .adjoinUtil()
             .print();

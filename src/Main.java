@@ -5,7 +5,7 @@ public class Main {
     static Matrix m = new Matrix(0, 0);
 
     private static void menu(){
-        System.out.println("Menu");
+        System.out.println("$ Pilihan Menu $");
         System.out.println("0. Lihat matriks tersimpan");
         System.out.println("1. Sistem Persamaan Linier");
         System.out.println("2. Determinan");
@@ -66,19 +66,15 @@ public class Main {
         int choice = input.nextInt();
         switch(choice){
             case 1:
-                System.out.println("Menggunakan metode eliminasi Gauss (EF):");
                 m.splGauss();
                 break;
             case 2:
-                System.out.println("Menggunakan metode eliminasi Gauss-Jordan (REF):");
                 m.splGaussJordan();
                 break;
             case 3:
-                System.out.println("Menggunakan metode Matriks Balikan (invers):");
                 m.splInv();
                 break;
             case 4:
-                System.out.println("Menggunakan metode Kaidah Cramer (determinan):");
                 m.splCram();
                 break;
             default:
@@ -86,6 +82,7 @@ public class Main {
                 System.out.println("Metode apa yang Anda inginkan?");
                 choice = input.nextInt();
         }
+        System.out.println();
     }
 
     private static void det(){
@@ -97,15 +94,12 @@ public class Main {
         int choice = input.nextInt();
         switch(choice){
             case 1:
-                System.out.println("Menggunakan metode eliminasi Gauss (EF):");
                 m.detGauss();
                 break;
             case 2:
-                System.out.println("Menggunakan metode eliminasi Gauss-Jordan (REF):");
                 m.detGaussJordan();
                 break;
             case 3:
-                System.out.println("Menggunakan Metode Cramer:");
                 m.detCram();
                 break;
             default:
@@ -113,6 +107,7 @@ public class Main {
                 System.out.println("Metode apa yang Anda inginkan?");
                 choice = input.nextInt();
         }
+        System.out.println();
     }
 
     private static void inv(){
@@ -123,11 +118,9 @@ public class Main {
         int choice = input.nextInt();
         switch(choice){
             case 1:
-                System.out.println("Menggunakan metode eliminasi Gauss-Jordan (REF):");
                 m.invGaussJordan();
                 break;
             case 2:
-                System.out.println("Menggunakan Metode Crammer");
                 m.invCram();
                 break;
             default:
@@ -135,6 +128,7 @@ public class Main {
                 System.out.println("Metode apa yang Anda inginkan?");
                 choice = input.nextInt();
         }
+        System.out.println();
     }
 
     public static void main(String[] args){
