@@ -10,15 +10,17 @@ Anggota Kelompok:
 root
  ├─ bin
  |   ├─ Main.class
- |   ├─ Matrix.class
+ |   └─ Matrix.class
  ├─ src
  |   ├─ Main.java
- |   ├─ Matrix.java
+ |   └─ Matrix.java
  ├─ test
  |   ├─ spl1.txt
  |   ├─ spl1_sol.txt
  |   ├─ sq1.txt
- |   └─ sq1_sol.txt
+ |   ├─ sq1_sol.txt
+ |   ├─    ...
+ |   └─ internosol.txt
  └─ doc
      ├─ laporan.docx
      └─ README.md
@@ -45,10 +47,10 @@ root
   - [x] Gauss
   - [x] Gauss-Jordan
   - [x] Metode Invers
-  - [ ] Kaidah Cramer
+  - [x] Kaidah Cramer
   - [x] Solusi Tunggal
-  - [ ] Tidak ada solusi
-  - [ ] Solusi banyak (bentuk parametrik)
+  - [x] Tidak ada solusi
+  - [x] Solusi banyak (bentuk parametrik)
   - [x] Interpolasi
   
  ### MatrixSquare.java
@@ -61,26 +63,26 @@ root
   - [x] Adjoin
   
  ### File Testing + Kunci
-  - [ ] SPL solusi tunggal (1/10)
-  - [ ] SPL solusi banyak (0/10)
-  - [ ] SPL tanpa solusi (0/10)
-  - [ ] Determinan (1/10)
-  - [ ] Matriks invers (1/10)
-  - [ ] Adjoin (0/10)
-  - [ ] Interpolasi (0/10)
+  - [x] SPL solusi tunggal
+  - [x] SPL solusi banyak
+  - [x] SPL tanpa solusi
+  - [x] Determinan
+  - [x] Matriks invers
+  - [x] Adjoin
+  - [x] Interpolasi 
   
  ### [Laporan](https://docs.google.com/document/d/1cTYE0Pc5u0voAtmANKqlEoI5vR4JmfMVTUiB3ySZthE/edit?usp=sharing)
-  - [ ] Cover
-  - [ ] Bab 1 : deskripsi masalah
-  - [ ] Bab 2: Teori singkat mengenai metode eliminasi Gauss, metode eliminasi Gauss-Jordan, deteminan, matriks balikan, matriks kofaktor, matriks adjoin, kaidah Cramer, interpolasi polinom.
-  - [ ] Bab 3: Implementasi program dalam Java, meliputi struktur class yang didefinisikan (atribut dan method), garis besar program, dll.
+  - [x] Cover
+  - [x] Bab 1 : deskripsi masalah
+  - [x] Bab 2: Teori singkat mengenai metode eliminasi Gauss, metode eliminasi Gauss-Jordan, deteminan, matriks balikan, matriks kofaktor, matriks adjoin, kaidah Cramer, interpolasi polinom.
+  - [x] Bab 3: Implementasi program dalam Java, meliputi struktur class yang didefinisikan (atribut dan method), garis besar program, dll.
   - [ ] Bab 4: Eksperimen. Bab ini beris hasil eksekusi program terhadap contoh-contoh kasus yang diberikan berikut analisis hasil eksekusi tersebut
   - [ ] Bab 5: Kesimpulan, saran, dan refleksi (hasil yang dicapai, saran pengembangan, dan refleksi anda terhadap tugas ini).
-  - [ ] Referensi (buku, web), yang dipakai/diacu di dalam Daftar Referensi.
+  - [x] Referensi (buku, web), yang dipakai/diacu di dalam Daftar Referensi.
  
  ### Lainnya
   - [x] Input from file
-  - [ ] Output to file
+  - [x] Output to file
   - [ ] GUI (opsional)
 
 ## Spesifikasi Tugas
