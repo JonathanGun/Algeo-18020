@@ -123,11 +123,11 @@ public class Main {
                 m.inputMatrix(input, true);
                 int detchoice = getDetMethod();
                 if (detchoice == 1){
-                    System.out.println(m.detGauss());
+                    m.detGauss();
                 } else if (detchoice == 2){
-                    System.out.println(m.detGaussJordan());
+                    m.detGaussJordan();
                 } else if (detchoice == 3){
-                    System.out.println(m.detCram());
+                    m.detCram();
                 }
             
             // Invers

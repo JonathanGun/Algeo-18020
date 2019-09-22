@@ -9,18 +9,22 @@ public class Matrix{
     private double[][] tabInt;
     private int rows, cols;
     private double scalar;
-    private boolean[] solution;
+    private boolean[] freeVar;
     private boolean isInterpolationMatrix;
-    private String[] solutionString;
+    private String[] solution;
 
     // Constructor
     public Matrix(int r, int c){
+        this.reset(r, c);
+    }
+
+    private void reset(int r, int c){
         this.rows   = r;
         this.cols   = c;
         this.scalar = 1;
         this.tabInt = new double[this.rows+5][this.cols+5];
-        this.solution       = new boolean[this.cols+5];
-        this.solutionString = new String[this.cols+5];
+        this.freeVar       = new boolean[this.cols+5];
+        this.solution = new String[this.cols+5];
     }
 
     // Selector
@@ -140,9 +144,7 @@ public class Matrix{
             }
         }
 
-        this.tabInt = new double[this.rows+5][this.cols+5];
-        this.solution = new boolean[this.cols+5];
-        this.solutionString = new String[this.cols+5];
+        this.reset(this.rows, this.cols);
         this.inputElements(input);
     }
 
@@ -175,9 +177,8 @@ public class Matrix{
             this.rows = input.nextInt();
         }
         this.cols = this.rows+1;
-        this.tabInt = new double[this.rows+5][this.cols+5];
-        this.solution = new boolean[this.cols+5];
-        this.solutionString = new String[this.cols+5];
+
+        this.reset(this.rows, this.cols);
         this.inputInterpolationData(input);
     }
 
@@ -237,8 +238,8 @@ public class Matrix{
     private Matrix duplicateMatrix(){
         Matrix m = new Matrix(this.rows, this.cols);
         m.scalar = this.scalar;
+        m.freeVar = this.freeVar;
         m.solution = this.solution;
-        m.solutionString = this.solutionString;
         m.isInterpolationMatrix = this.isInterpolationMatrix;
         for(int r = 1; r <= this.rows; r++){
             for(int c = 1; c <= this.cols; c++){
@@ -317,8 +318,8 @@ public class Matrix{
         if (!ans.hasSolution()) System.out.println("Tidak ada solusi");
         else {
             ans.getSolution();
+            this.freeVar = ans.freeVar;
             this.solution = ans.solution;
-            ans.printSolution();
         }
     }
 
@@ -329,8 +330,8 @@ public class Matrix{
         if (!ans.hasSolution()) System.out.println("Tidak ada solusi");
         else {
             ans.getSolution();
+            this.freeVar = ans.freeVar;
             this.solution = ans.solution;
-            ans.printSolution();
         }
     }
 
@@ -339,7 +340,7 @@ public class Matrix{
         // AX = B, maka X = A^-1 B
         // A: getCoeffMatrix, B: getLastCol
         if(this.isSquareMatrix()) {
-            if(this.detGauss() == 0){
+            if(this.detGaussUtil() == 0){
                 System.out.println("Tidak bisa dicari matriks invers! Determinannya 0!");
             } else {
                 this.print();
@@ -348,12 +349,12 @@ public class Matrix{
                 a = a.invCramUtil();
                 Matrix ans = multMatrix(a,b);
                 for(int r = 1; r <= this.rows; r++){
-                    this.solutionString[r] = String.format("X%d = %.4f", r, ans.getElmt(r, 1));
+                    String s = this.formatAsFirstNum(this.prettify(ans.getElmt(r, 1)));
+                    this.solution[r] = String.format("X%d = ", r) + s;
                 }
                 this.printSolutionString();
             }
-        }
-        else{
+        } else {
             System.out.println("Tidak bisa dicari solusinya dengan metode ini karena tidak bisa didapat inversnya!");
             System.out.println("Silakan coba metode lain.");
         }
@@ -364,7 +365,7 @@ public class Matrix{
         // yang ditukar kolom i dengan kolom terakhir (manfaatkan getlastcol)
         if(this.isSquareMatrix()) {
             if (this.hasSolution()) {
-                double denom = this.detGauss();
+                double denom = this.detGaussUtil();
                 if (denom == 0) {
                     System.out.println("Matriks ini determinan 0, tidak bisa ditentukan dengan metode Crammer");
                     System.out.println("Silakan mencoba metode lain");
@@ -375,12 +376,13 @@ public class Matrix{
                         for (int r = 1 ; r <= this.rows ; r++) {
                             ans.setElmt(r, c, a.getElmt(r, 1));
                         }
-                        this.solutionString[c] = String.format("X%d = %.4f", c, ans.detGauss() / denom);
+                        String s = this.formatAsFirstNum(this.prettify(ans.detGaussUtil() / denom));
+                        this.solution[c] = String.format("X%d = ", c) + s;
                     }
                     this.printSolutionString();
                 }
             }
-        } else{
+        } else {
             System.out.println("Tidak bisa dicari solusinya dengan metode ini karena matriks tidak berbentuk persegi!");
             System.out.println("Silakan coba metode lain.");
         }
@@ -445,12 +447,13 @@ public class Matrix{
         return this.cols+1;
     }
 
-    private void getSolution(){
-        for(int c = this.cols-1; c >= 1; c--){
-            this.solution[c] = true;
-        }
+    private void getFreeVar(){
+        // set semua jadi true dulu
+        for(int c = this.cols-1; c >= 1; c--) this.freeVar[c] = true;
+
+        // kalau ada yg bukan freevar baru diset jadi false
         for(int r = this.rows; r >= 1; r--){
-            if (this.idxNotZero(r) < this.cols) this.solution[r] = false;
+            if (this.idxNotZero(r) < this.cols) this.freeVar[r] = false;
         }
     }
 
@@ -462,9 +465,28 @@ public class Matrix{
         }
     }
 
-    private void printSolution(){
-        System.out.println("Solusi dari matriks SPL:");
-        
+    private String prettify(double n){
+        String ans = "";
+        if(n < 0) ans += "- ";
+        else if (n > 0) ans += "+ ";
+        else return ans;
+        n = Math.abs(n);
+
+        if(n == Math.round(n)) ans += Math.round(n);
+        else ans += String.format("%.4f", n);
+        return ans;
+    }
+
+    private String formatAsFirstNum(String s){
+        if(s.substring(0,1).equals("+")) s = s.substring(2);
+        else s = s.substring(0,1)+s.substring(2);
+        if(s.isEmpty()) s = "0";
+        return s;
+    }
+
+    private void getSolution(){
+        this.getFreeVar();
+
         int r = 1;
         // cari row terbawah yang tidak 0 semua
         for(int rr = 1; rr <= this.rows; rr++){
@@ -472,9 +494,10 @@ public class Matrix{
         }
 
         Matrix ans = new Matrix(this.cols-1, this.cols);
+        ans.freeVar = this.freeVar;
         ans.setZero();
         for(int cc = this.cols-1; cc >= 1; cc--){
-            if(!this.solution[cc]){
+            if(!ans.freeVar[cc]){
                 ans.setElmt(cc, this.cols, this.getElmt(r, this.cols));
                 // jumlahkan semua
                 for(int c = this.cols-1; c > cc; c--){
@@ -485,12 +508,53 @@ public class Matrix{
                 ans.setElmt(cc, cc, 1);
             }
         }
-        ans.print();
+
+        for(r = 1; r <= ans.rows; r++){
+            ans.solution[r] = String.format("X%d = ", r);
+            boolean firstNum = true;
+            for(int c = ans.cols; c >= 1; c--){
+                String s = ans.prettify(ans.getElmt(r, c));
+                if(s.isEmpty()) continue; // kalau 0 langsung skip
+
+                // angka
+                String num = s.substring(2);
+                String sign = s.substring(0,1);
+                // angka 1 tidak perlu ditulis (kecuali angka pertama)
+                if(!firstNum && num.equals("1")) s = sign+" ";
+
+                // angka pertama tidak perlu +
+                if(firstNum) {
+                    if(sign.equals("+")) s = num;
+                    else s = sign+num;
+
+                    // tidak perlu tulis angka 1 krn ada hurufnya (meskipun angka pertama)
+                    if(c != ans.cols && ans.getElmt(r, c) != 0){
+                        if(sign.equals("+")) s = "";
+                        else s = sign;
+                    }
+                    firstNum = false;
+                }
+
+                // huruf
+                if(c != ans.cols && ans.getElmt(r, c) != 0){
+                    s += String.format("%c ", 'a'+(ans.cols-c-1));
+                }
+                else s += " ";
+
+                ans.solution[r] += s;
+            }
+
+            if(firstNum) ans.solution[r] += "0";
+        }
+        this.solution = ans.solution;
+
+        System.out.println("Solusi dari matriks SPL:");
+        ans.printSolutionString();
     }
 
     private void printSolutionString(){
         for(int i = 1; i <= this.cols-1; i++){
-            System.out.println(this.solutionString[i]);
+            System.out.println(this.solution[i]);
         }
     }
 
@@ -546,8 +610,8 @@ public class Matrix{
                 if(sol.getElmt(i, 1) > 0) System.out.printf("+ %.4f", sol.getElmt(i, 1));
                 else System.out.printf("- %.4f", -sol.getElmt(i, 1));
 
-                if(i == 2) System.out.print("x");
-                else System.out.printf("x^%d", i - 1);
+                if(i == 2) System.out.print("x ");
+                else System.out.printf("x^%d ", i - 1);
             }
         }
         System.out.println();
@@ -576,7 +640,7 @@ public class Matrix{
     // INVERS
     // Gauss-Jordan
     public void invGaussJordan(){
-        if (this.detGauss() == 0){
+        if (this.detGaussUtil() == 0){
             System.out.println("Tidak bisa dicari matriks invers! Determinannya 0!");
         } else {
             this.duplicateMatrix()
@@ -620,7 +684,7 @@ public class Matrix{
 
     // Cramer
     public void invCram(){
-        if (this.detGauss() == 0){
+        if (this.detGaussUtil() == 0){
             System.out.println("Tidak bisa dicari matriks invers! Determinannya 0!");
         } else {
             Matrix m = this.duplicateMatrix().invCramUtil();
@@ -649,10 +713,11 @@ public class Matrix{
 
     // DETERMINAN
     // Cramer
-    public double detCram(){
-        return this.duplicateMatrix()
-                   .getCoeffMatrix()
-                   .detCramUtil();
+    public void detCram(){
+        double det = this.duplicateMatrix()
+                         .getCoeffMatrix()
+                         .detCramUtil();
+        System.out.println(this.formatAsFirstNum(this.prettify(det)));
     }
 
     private double detCramUtil(){
@@ -670,7 +735,11 @@ public class Matrix{
     }
 
     // Gauss - EF
-    public double detGauss(){
+    public void detGauss(){
+        System.out.println(this.formatAsFirstNum(this.prettify(this.detGaussUtil())));
+    }
+
+    private double detGaussUtil(){
         Matrix m = this.duplicateMatrix()
                        .gaussElim();
         for(int r = 1; r <= m.rows; r++){
@@ -680,7 +749,11 @@ public class Matrix{
     }
 
     // Gauss Jordan - REF
-    public double detGaussJordan(){
+    public void detGaussJordan(){
+        System.out.println(this.formatAsFirstNum(this.prettify(this.detGaussJordanUtil())));
+    }
+
+    private double detGaussJordanUtil(){
         Matrix m = this.duplicateMatrix()
                        .gaussJordanElim();
         for(int r = 1; r <= m.rows; r++){
