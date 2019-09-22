@@ -98,6 +98,7 @@ public class Main {
 
     public static void main(String[] args){
         Matrix m = new Matrix(0, 0);
+        Matrix answm;
 
         int choice = getMenu();
         while (choice != 7){
@@ -144,12 +145,10 @@ public class Main {
             } else if (choice == 4){
                 m.inputMatrix(input, true);
                 m.cofactor();
-            
             // Adjoin
             } else if (choice == 5){
                 m.inputMatrix(input, true);
                 m.adjoin();
-            
             // Interpolation
             } else if (choice == 6){
                 m.inputInterpolation(input);
@@ -157,7 +156,6 @@ public class Main {
             }
 
             System.out.println();
-            m.outputFile(input);
             choice = getMenu();
         }
         System.out.printf("Terima kasih!");

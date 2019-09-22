@@ -3,7 +3,7 @@ import java.util.Vector;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.FileWriter;
 
 public class Matrix{
     private double[][] tabInt;
@@ -55,23 +55,49 @@ public class Matrix{
         }
     }
 
-    public void outputFile(Scanner input) {
+    public void matriksOutputFile(Scanner input) {
         System.out.print("Apakah hasil ini ingin disimpan ke dalam file? (0/1)\n");
         int save = input.nextInt();
         if(save == 1) {
             System.out.println("Masukkan nama file+extension: ");
             String fileName = input.next();
             try{
-                File file = new File ("../test/output/" + fileName);
+                FileWriter file = new FileWriter ("../test/output/" + fileName);
+                String hsl = "";
+                for(int r=1; r<=this.rows; r++) {
+                    for(int c=1; c<=this.cols; c++) {
+                        hsl+=Double.toString(this.tabInt[r][c])+" ";
+                    }
+                    hsl = hsl+"\r\n";
+                }
 
-                if(!file.exists()) {
-                    file.createNewFile();
+                for(int i=1; i<=hsl.length(); i++){
+                    file.write(hsl.charAt(i));
                 }
-                else{
-                    System.out.println("File sudah ada!");
+            }catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+    }
+
+    public void detOutputFile(Scanner input, double det) {
+        System.out.print("Apakah hasil ini ingin disimpan ke dalam file? (0/1)\n");
+        int save = input.nextInt();
+        if(save == 1) {
+            System.out.println("Masukkan nama file+extension: ");
+            String fileName = input.next();
+            try{
+                FileWriter file = new FileWriter ("../test/output/" + fileName);
+                String hsl = "";
+                for(int c=1; c<=this.cols; c++) {
+                    hsl+=Double.toString(det)+" ";
                 }
-            }catch (IOException e) {
-                e.printStackTrace();
+
+                for(int i=1; i<=hsl.length(); i++){
+                    file.write(hsl.charAt(i));
+                }
+            }catch (Exception e) {
+                System.out.println(e);
             }
         }
     }
@@ -556,7 +582,7 @@ public class Matrix{
     public double valueFunction(Scanner input, Matrix sol) {
         double x;
         do{
-            System.out.print("Masukkan nilai x di dalam range yang ingin ditaksir: ");
+            System.out.printf("Masukkan nilai x antara %f dan %f untuk ditaksir nilai Y nya: ",this.nilaiMinimum(),this.nilaiMaksimal());
             x = input.nextDouble();
             if((x < this.nilaiMinimum()) || (x > this.nilaiMaksimal())) {
                 System.out.println("Titik tidak di dalam range. Silakan ulangi.");
