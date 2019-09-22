@@ -22,28 +22,28 @@ public class Main {
                 m.showMatrix();
                 break;
             case 1:
-                m.inputMatrix(input, false);
+                m.inputMatrix(false);
                 spl();
                 break;
             case 2:
-                m.inputMatrix(input, true);
+                m.inputMatrix(true);
                 det();
                 break;
             case 3:
-                m.inputMatrix(input, true);
+                m.inputMatrix(true);
                 inv();
                 break;
             case 4:
-                m.inputMatrix(input, true);
+                m.inputMatrix(true);
                 m.cofactor();
                 break;
             case 5:
-                m.inputMatrix(input, true);
+                m.inputMatrix(true);
                 m.adjoin();
                 break;
             case 6:
-                m.inputInterpolation(input);
-                m.interpolate(input);
+                m.inputInterpolation();
+                m.interpolate();
                 break;
             case 7:
                 break;

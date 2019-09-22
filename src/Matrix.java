@@ -1,4 +1,4 @@
-import java.util.Scanner
+import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -12,6 +12,7 @@ public class Matrix{
     private boolean[] freeVar;
     private boolean isInterpolationMatrix;
     private String[] solution;
+    private Scanner input = new Scanner(System.in);
     // METHODS :
     // (27)  Kelompok primitif - constructor, selector/getter, setter
     // (116) Kelompok I/O - input(matriks, interpolasi), output(matriks, interpolasi, file)
@@ -34,7 +35,7 @@ public class Matrix{
         this.cols   = c;
         this.scalar = 1;
         this.tabInt = new double[this.rows+5][this.cols+5];
-        this.freeVar       = new boolean[this.cols+5];
+        this.freeVar  = new boolean[this.cols+5];
         this.solution = new String[this.cols+5];
     }
 
@@ -49,7 +50,7 @@ public class Matrix{
         return m;
     }
 
-    private void getDimension(Scanner input){
+    private void getDimension(){
         this.rows = 1;
         this.cols = input.nextLine().split(" ").length;
         while(input.hasNextLine()){
@@ -115,7 +116,7 @@ public class Matrix{
     // ============================================ Kelompok I/O ============================================ //
     // == INPUT == //
     // Matriks
-    private void inputElements(Scanner input){
+    private void inputElements(){
         for(int r = 1; r <= this.rows; r++) {
             for(int c = 1; c <= this.cols; c++) {
                 this.setElmt(r, c, input.nextDouble());
@@ -123,7 +124,7 @@ public class Matrix{
         }
     }
 
-    public void inputMatrix(Scanner input, boolean isSq){
+    public void inputMatrix(boolean isSq){
         if (!this.isInterpolationMatrix && ((this.isSquareMatrix() && isSq) || !isSq) && this.rows != 0) {
             System.out.printf("Tersimpan matriks sebelumnya:\n");
             this.print();
@@ -139,12 +140,12 @@ public class Matrix{
             String fileName = input.next();
             try{
                 File inputFile = new File("../test/" + fileName);
-                this.getDimension(new Scanner(inputFile));
+                input = new Scanner(inputFile);
+                this.getDimension();
+                input = new Scanner(inputFile);
                 if(isSq && !this.isSquareMatrix()){
                     System.out.printf("Matriks dalam file tidak persegi! Input akan dilakukan melalui keyboard\n");
                     useKeyboard = 1;
-                } else {
-                    input = new Scanner(inputFile);
                 }
             } catch (FileNotFoundException e){
                 System.out.printf("File tidak ditemukan! Input akan dilakukan melalui keyboard!\n");
@@ -153,6 +154,7 @@ public class Matrix{
         }
 
         if (useKeyboard == 1){
+            input = new Scanner(System.in);
             if (isSq){
                 System.out.printf("Masukkan ordo matriks: ");
                 this.rows = input.nextInt();
@@ -164,11 +166,11 @@ public class Matrix{
         }
 
         this.reset(this.rows, this.cols);
-        this.inputElements(input);
+        this.inputElements();
     }
 
     // Interpolasi
-    private void inputInterpolationData(Scanner input){
+    private void inputInterpolationData(){
         for(int r = 1; r <= this.rows; r++){
             double x = input.nextDouble();
             double y = input.nextDouble();
@@ -180,7 +182,7 @@ public class Matrix{
         }
     }
 
-    public void inputInterpolation(Scanner input){
+    public void inputInterpolation(){
         if (this.isInterpolationMatrix && this.rows != 0){
             System.out.printf("Tersimpan data interpolasi sebelumnya:\n");
             this.printInterpolationData();
@@ -196,8 +198,13 @@ public class Matrix{
             String fileName = input.next();
             try{
                 File inputFile = new File("../test/" + fileName);
-                this.getDimension(new Scanner(inputFile));
                 input = new Scanner(inputFile);
+                this.getDimension();
+                input = new Scanner(inputFile);
+                if(this.cols != 2){
+                    System.out.printf("Matriks dalam file bukan berupa titik interpolasi! Input akan dilakukan melalui keyboard\n");
+                    useKeyboard = 1;
+                }
             } catch (FileNotFoundException e){
                 System.out.printf("File tidak ditemukan! Input akan dilakukan melalui keyboard!\n");
                 useKeyboard = 1;
@@ -205,13 +212,14 @@ public class Matrix{
         }
 
         if (useKeyboard == 1) {
+            input = new Scanner(System.in);
             System.out.print("Berapa banyak titik yang Anda ingin masukkan? ");
             this.rows = input.nextInt();
         }
         this.cols = this.rows+1;
 
         this.reset(this.rows, this.cols);
-        this.inputInterpolationData(input);
+        this.inputInterpolationData();
     }
 
     // == OUTPUT == //
@@ -258,7 +266,7 @@ public class Matrix{
     }
 
     // File
-    public void matriksOutputFile(Scanner input) {
+    public void matriksOutputFile() {
         System.out.print("Apakah hasil ini ingin disimpan ke dalam file? (0/1)\n");
         int save = input.nextInt();
         if(save == 1) {
@@ -283,7 +291,7 @@ public class Matrix{
         }
     }
 
-    public void detOutputFile(Scanner input, double det) {
+    public void detOutputFile(double det) {
         System.out.print("Apakah hasil ini ingin disimpan ke dalam file? (0/1)\n");
         int save = input.nextInt();
         if(save == 1) {
@@ -304,14 +312,14 @@ public class Matrix{
             }
         }
     }
-
+    
+    // String
     private void printSolutionString(){
         for(int i = 1; i <= this.cols-1; i++){
             System.out.println(this.solution[i]);
         }
     }
 
-    // Format String
     private String prettify(double n){
         String ans = "";
         if(n < 0) ans += "- ";
@@ -654,7 +662,7 @@ public class Matrix{
     }
 
     // ================================== 2. BAGIAN INTERPOLASI ==================================== //
-    public void interpolate(Scanner input){
+    public void interpolate(){
         Matrix ans = this.gaussJordanElim();
         // Kasus input beberapa titik sama, jadikan 1 titik saja
         for(int r = 1; r <= ans.rows; r++) {
@@ -667,13 +675,13 @@ public class Matrix{
         else {
             Matrix sol = ans.getLastCol();
             ans.printSolutionInterpolation(sol);
-            System.out.printf("nilai y = %.4f", this.estimateYInterpolation(input, sol));
+            System.out.printf("nilai y = %.4f", this.estimateYInterpolation(sol));
         }
         System.out.println();
         System.out.println();
     }
 
-    private double estimateYInterpolation(Scanner input, Matrix sol) {
+    private double estimateYInterpolation(Matrix sol) {
         double x;
         double minX = this.minXInterpolation();
         double maxX = this.maxXInterpolation();
