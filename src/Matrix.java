@@ -1,11 +1,11 @@
-import java.util.Scanner;
-import java.util.Vector;
+import java.util.Scanner
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 
 public class Matrix{
+    // Variables
     private double[][] tabInt;
     private int rows, cols;
     private double scalar;
@@ -18,11 +18,10 @@ public class Matrix{
     // (287) Elementary Row Operation - swap, scale, add
     // (313) Kelompok Cek Properti Matriks - isSq, hasSolution, rowValid, rowZero
     // (342) Kelompok Manipulasi Matriks - reduce, transpose, mult, duplicate
-    // (401) Bagian SPL - gauss, gaussJordan, inverse, cramer
+    // (401) Kelompok SPL - gauss, gaussJordan, inverse, cramer
     // (480) Kelompok Eliminasi SPL - gaussElim, jordanElim, gaussJordanElim, getSPLsolution, constructSolutionMatrix, constructSolutionString
-    // (606) Bagian Interpolasi - interpolasi, estimaasi nilai Y
-    // (643) Bagian Matriks Square (NxN) - invers(gaussJordan, Cramer), determinan(gaussJordan, Cramer), Cofactor, Adjoin
-    // (805) Operasi Lain - prettify, formatAsFirstNum
+    // (606) Kelompok Interpolasi - interpolasi, estimaasi nilai Y
+    // (643) Kelompok Matriks Bujur Sangkar (NxN) - invers(gaussJordan, Cramer), determinan(gaussJordan, Cramer), Cofactor, Adjoin
 
     // =========================================== Kelompok Primitif ========================================== //
     // Constructor
@@ -284,6 +283,26 @@ public class Matrix{
         for(int i = 1; i <= this.cols-1; i++){
             System.out.println(this.solution[i]);
         }
+    }
+
+    // Format String
+    private String prettify(double n){
+        String ans = "";
+        if(n < 0) ans += "- ";
+        else if (n > 0) ans += "+ ";
+        else return ans;
+        n = Math.abs(n);
+
+        if(n == Math.round(n)) ans += Math.round(n);
+        else ans += String.format("%.4f", n);
+        return ans;
+    }
+
+    private String formatAsFirstNum(String s){
+        if(s.substring(0,1).equals("+")) s = s.substring(2);
+        else s = s.substring(0,1)+s.substring(2);
+        if(s.isEmpty()) s = "0";
+        return s;
     }
 
     // ================================= Elementary Row Operation ================================= //
@@ -816,25 +835,5 @@ public class Matrix{
         return this.duplicateMatrix()
                    .cofactorUtil()
                    .transpose();
-    }
-
-    // ====================================== Operasi Lain ====================================== //
-    private String prettify(double n){
-        String ans = "";
-        if(n < 0) ans += "- ";
-        else if (n > 0) ans += "+ ";
-        else return ans;
-        n = Math.abs(n);
-
-        if(n == Math.round(n)) ans += Math.round(n);
-        else ans += String.format("%.4f", n);
-        return ans;
-    }
-
-    private String formatAsFirstNum(String s){
-        if(s.substring(0,1).equals("+")) s = s.substring(2);
-        else s = s.substring(0,1)+s.substring(2);
-        if(s.isEmpty()) s = "0";
-        return s;
     }
 }
