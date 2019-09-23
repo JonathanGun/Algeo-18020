@@ -962,4 +962,46 @@ public class Matrix{
                    .cofactorUtil()
                    .transpose();
     }
+    // == Studi Kasus == //
+    private Matrix matriksHilbert(){
+        int n = input.nextInt();
+        Matrix m = new Matrix(n,n+1);
+        for (int r = 1; r<= m.rows; r++){
+            for(int c = 1; c<= m.cols; c++){
+                if (c == m.cols) {
+                    if (r == 1 ) {
+                        m.setElmt(r, c, 1);
+                    }
+                    else {
+                        m.setElmt(r, c, 0);
+                    }
+                }
+                else { double x = 1/(r+c-1);
+                m.setElmt(r, c, x);  
+                }
+            }
+        }
+        return m;
+    }
+
+    private void interpolasiDerajat(){
+        int n = input.nextInt();
+        Matrix m = new Matrix(n+1, n+2);
+        double h = 2/n;
+        double x = 0;
+
+        for (int r = 1; r<= m.rows; r++){
+            double y = fungsi(x);
+            for(int c = 1; c <= m.cols; c++){
+                if (c != m.cols) m.setElmt(r, c, Math.pow(x, c-1));
+                else m.setElmt(r, c, y);
+            }
+            x += h;
+        }
+        m.interpolate();
+        
+    }
+    private double fungsi(double x){
+        return ((x*x + Math.sqrt(x)) / (Math.exp(x) + x));
+    }
 }

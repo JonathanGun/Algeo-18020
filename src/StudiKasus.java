@@ -4,6 +4,7 @@ public class StudiKasus {
 	static Scanner input = new Scanner(System.in);
     static Matrix m = new Matrix(0, 0);
 
+   
     private static void menu(){
     	System.out.println("$ Pilihan Menu Studi Kasus $");
         System.out.println("0. Lihat matriks tersimpan");
@@ -23,7 +24,7 @@ public class StudiKasus {
                 m.showMatrix();
                 break;
             case 1:
-            	// fungsi_di_sini
+            	
                 break;
             case 2:
             	// fungsi_di_sini
@@ -57,4 +58,6 @@ public class StudiKasus {
     public static void main(String[] args){
         menu();
     }
+
+ 
 }
