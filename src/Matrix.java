@@ -14,7 +14,7 @@ public class Matrix{
     private boolean isInterpolationMatrix;
     private String[] solution;
     private Scanner input = new Scanner(System.in);
-    private static double EPS = 1e-12;
+    private static double EPS = 1e-7;
     // METHODS :
     // (27)  Kelompok primitif - constructor, selector/getter, setter
     // (116) Kelompok I/O - input(matriks, interpolasi), output(matriks, interpolasi, file)
@@ -330,7 +330,7 @@ public class Matrix{
         else return ans;
         n = Math.abs(n);
 
-        if(Math.abs(n - Math.round(n)) < EPS) ans += Math.round(n);
+        if(Math.round(n) == this.myRound(n)) ans += Math.round(n);
         else ans += String.format("%.4f", n);
         return ans;
     }
@@ -365,6 +365,7 @@ public class Matrix{
     private void addRow(int r1, int r2, double k){
         for(int c = 1; c <= this.cols; c++){
             this.tabInt[r1][c] += k*this.getElmt(r2, c);
+            this.tabInt[r1][c] = this.myRound(this.tabInt[r1][c]);
         }
     }
 
@@ -450,6 +451,7 @@ public class Matrix{
                     for(int r2 = 1; r2 <= m2.rows; r2++) {
                         ans.tabInt[r1][c2] += m1.getElmt(r1, r2) * m2.getElmt(r2, c2);
                     }
+                    ans.tabInt[r1][c2] = ans.myRound(ans.tabInt[r1][c2]);
                 }
             }
         }
@@ -525,7 +527,7 @@ public class Matrix{
                 Matrix a = this.duplicateMatrix();
                 Matrix b = this.getLastCol();
                 a = a.invCramUtil();
-                
+
                 System.out.println("Hasil invers:");
                 a.print();
                 Matrix ans = multMatrix(a,b);
@@ -1027,7 +1029,13 @@ public class Matrix{
         m.interpolate();
         
     }
+
     private double fungsi(double x){
         return ((x*x + Math.sqrt(x)) / (Math.exp(x) + x));
+    }
+
+    private double myRound(double x){
+        if(Math.abs(x - Math.round(x)) < (1e9*Math.pow(Math.ulp(x), 0.77))) return Math.round(x);
+        return x;
     }
 }

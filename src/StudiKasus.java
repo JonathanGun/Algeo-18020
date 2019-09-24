@@ -71,6 +71,7 @@ public class StudiKasus {
             System.out.print("Masukkan nilai n: ");
             int n = input.nextInt();
             m = m.matriksHilbert(n);
+            m.showMatrix();
             m.splGauss();
         }
     }
