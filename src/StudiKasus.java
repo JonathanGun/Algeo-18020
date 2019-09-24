@@ -60,15 +60,18 @@ public class StudiKasus {
     }
 
     private static void solve1(char x){
-        switch(x){
-            case 'a':
-
-            case 'b':
-
-            case 'c':
-
-            case 'd':
-
+        if (x <= 'c'){
+            try{
+                m.inputMatrixFromFile("/StudiKasus/1"+x+".txt", false);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            m.splInv();
+        } else {
+            System.out.print("Masukkan nilai n: ");
+            int n = input.nextInt();
+            m = m.matriksHilbert(n);
+            m.splGauss();
         }
     }
 
