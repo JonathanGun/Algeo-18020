@@ -113,6 +113,7 @@ public class StudiKasus {
                     e.printStackTrace();
                 }
                 m.detGaussJordan();
+                m.detCram();
                 m.invGaussJordan();
                 m.cofactor();
                 break;

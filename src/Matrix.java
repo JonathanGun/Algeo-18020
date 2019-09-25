@@ -1036,7 +1036,7 @@ public class Matrix{
     }
 
     private double myRound(double x){
-        if(Math.abs(x - Math.round(x)) < (1e9*Math.pow(Math.ulp(x), 0.77))) return Math.round(x);
+        if(Math.abs(x - Math.round(x)) < (1e-13)) return Math.round(x);
         return x;
     }
 }
