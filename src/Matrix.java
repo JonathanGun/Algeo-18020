@@ -286,8 +286,10 @@ public class Matrix{
                     s = this.formatAsFirstNum(s);
                     firstNum = false;
                 }
-                s += "x";
-                if(i != 2) s += "^"+ (i - 1);
+                if(i != 1){
+                    s += "x";
+                    if(i != 2) s += "^"+ (i - 1);
+                }
                 System.out.print(s + " ");
             }
         }
