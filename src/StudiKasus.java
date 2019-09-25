@@ -77,21 +77,21 @@ public class StudiKasus {
     }
 
     private static void solve2(char x){
-        switch(x){
-            case 'a':
-
-            case 'b':
-
+        try{
+            m.inputMatrixFromFile("/StudiKasus/2"+x+".txt", false);
+        } catch (Exception e){
+            e.printStackTrace();
         }
+        m.splGauss();
     }
 
     private static void solve3(char x){
-        switch(x){
-            case 'a':
-
-            case 'b':
-
+        try{
+            m.inputMatrixFromFile("/StudiKasus/3"+x+".txt", false);
+        } catch (Exception e){
+            e.printStackTrace();
         }
+        m.splGaussJordan();
     }
 
     private static void solve4(char x){
@@ -109,11 +109,16 @@ public class StudiKasus {
 
     private static void solve6(){
         // penduduk
-        int tahun = input.nextInt();
+        try{
+            m.inputInterpolationFromFile("/StudiKasus/6.txt");
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        m.interpolate();
     }
 
     private static void solve7(){
-        int n = input.nextInt();  
+        m.interpolasiDerajat();
     }
 
     public static void main(String[] args){

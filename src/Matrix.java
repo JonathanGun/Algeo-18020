@@ -14,7 +14,9 @@ public class Matrix{
     private boolean isInterpolationMatrix;
     private String[] solution;
     private Scanner input = new Scanner(System.in);
-    private static double EPS = 1e-7;
+    private static PrintStream stdout = System.out;
+    private PrintStream fileout;
+
     // METHODS :
     // (27)  Kelompok primitif - constructor, selector/getter, setter
     // (116) Kelompok I/O - input(matriks, interpolasi), output(matriks, interpolasi, file)
@@ -25,9 +27,7 @@ public class Matrix{
     // (480) Kelompok Eliminasi SPL - gaussElim, jordanElim, gaussJordanElim, getSPLsolution, constructSolutionMatrix, constructSolutionString
     // (606) Kelompok Interpolasi - interpolasi, estimaasi nilai Y
     // (643) Kelompok Matriks Bujur Sangkar (NxN) - invers(gaussJordan, Cramer), determinan(gaussJordan, Cramer), Cofactor, Adjoin
-
-    private PrintStream stdout = System.out;
-    private PrintStream fileout;
+    // (1000) Kelompok fungsi pembantu lainnya
 
     // =========================================== Kelompok Primitif ========================================== //
     // Constructor
@@ -1013,9 +1013,10 @@ public class Matrix{
     }
 
     public void interpolasiDerajat(){
+        System.out.print("Masukkan derajat polinom: ");
         int n = this.input.nextInt();
         Matrix m = new Matrix(n+1, n+2);
-        double h = 2/n;
+        double h = 2.0/n;
         double x = 0;
 
         for (int r = 1; r<= m.rows; r++){
