@@ -97,74 +97,25 @@ public class StudiKasus {
     private static void solve4(char x){
         switch(x){
             case 'a': // 5x5, ada pilihan invers, deter, dll
-                System.out.println("Apa yang ingin Anda cari?");
-                System.out.println("1. Determinan");
-                System.out.println("2. Matriks balikan");
-                System.out.println("3. Matriks kofaktor");
-                int pil = input.nextInt();
-                
-                switch(pil){
-                    case 1:
-                        try{
-                            m.inputMatrixFromFile("/StudiKasus/4"+x+".txt", false);
-                        } catch (Exception e){
-                            e.printStackTrace();
-                        }
-                        m.detGauss();
-                        break;
-                    case 2:
-                        try{
-                            m.inputMatrixFromFile("/StudiKasus/4"+x+".txt", false);
-                        } catch (Exception e){
-                            e.printStackTrace();
-                        }
-                        m.invGaussJordan();
-                        break;
-                    case 3:
-                        try{
-                            m.inputMatrixFromFile("/StudiKasus/4"+x+".txt", false);
-                        } catch (Exception e){
-                            e.printStackTrace();
-                        }
-                        m.cofactor();
-                        break;
+                try{
+                    m.inputMatrixFromFile("/StudiKasus/4"+x+".txt", false);
+                } catch (Exception e){
+                    e.printStackTrace();
                 }
-                System.out.println();
-
+                m.detGaussJordan();
+                m.invGaussJordan();
+                m.cofactor();
+                break;
             case 'b': // 10x10
-                System.out.println("Apa yang ingin Anda cari?");
-                System.out.println("1. Determinan");
-                System.out.println("2. Matriks balikan");
-                System.out.println("3. Matriks kofaktor");
-                pil = input.nextInt();
-            
-                switch(pil){
-                    case 1:
-                        try{
-                            m.inputMatrixFromFile("/StudiKasus/4"+x+".txt", false);
-                        } catch (Exception e){
-                            e.printStackTrace();
-                        }
-                        m.detGauss();
-                        break;
-                    case 2:
-                        try{
-                            m.inputMatrixFromFile("/StudiKasus/4"+x+".txt", false);
-                        } catch (Exception e){
-                            e.printStackTrace();
-                        }
-                        m.invGaussJordan();
-                        break;
-                    case 3:
-                        try{
-                            m.inputMatrixFromFile("/StudiKasus/4"+x+".txt", false);
-                        } catch (Exception e){
-                            e.printStackTrace();
-                        }
-                        m.cofactor();
-                        break;
+                try{
+                    m.inputMatrixFromFile("/StudiKasus/4"+x+".txt", false);
+                } catch (Exception e){
+                    e.printStackTrace();
                 }
-            System.out.println();
+                m.detGaussJordan();
+                m.invGaussJordan();
+                m.cofactor();
+                break;
         }
     }
 
