@@ -728,6 +728,7 @@ public class Matrix{
             }
         }
 
+        ans.print();
         if (!ans.hasSolution()) System.out.println("Solusi interpolasi tidak dapat ditemukan");
         else {
             Matrix sol = ans.getLastCol();
