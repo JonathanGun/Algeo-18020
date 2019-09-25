@@ -97,9 +97,26 @@ public class StudiKasus {
     private static void solve4(char x){
         switch(x){
             case 'a': // 5x5, ada pilihan invers, deter, dll
-
+                try{
+                    m.inputMatrixFromFile("/StudiKasus/4"+x+".txt", false);
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+                m.detGaussJordan();
+                m.invGaussJordan();
+                m.cofactor();
+                break;
             case 'b': // 10x10
-
+                try{
+                    m.inputMatrixFromFile("/StudiKasus/4"+x+".txt", false);
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+                m.detGaussJordan();
+                m.detCram();
+                m.invGaussJordan();
+                m.cofactor();
+                break;
         }
     }
 
