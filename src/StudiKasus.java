@@ -95,33 +95,35 @@ public class StudiKasus {
     }
 
     private static void solve4(char x){
-        switch(x){
-            case 'a': // 5x5, ada pilihan invers, deter, dll
-                try{
-                    m.inputMatrixFromFile("/StudiKasus/4"+x+".txt", false);
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
-                m.detGaussJordan();
-                m.invGaussJordan();
-                m.cofactor();
-                break;
-            case 'b': // 10x10
-                try{
-                    m.inputMatrixFromFile("/StudiKasus/4"+x+".txt", false);
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
-                m.detGaussJordan();
-                m.detCram();
-                m.invGaussJordan();
-                m.cofactor();
-                break;
+        try{
+            m.inputMatrixFromFile("/StudiKasus/4"+x+".txt", false);
+        } catch (Exception e){
+            e.printStackTrace();
         }
+        m.detGaussJordan();
+        m.invGaussJordan();
+        m.cofactor();
     }
 
     private static void solve5(){
         // rangkaian
+        try{
+            m.inputMatrixFromFile("/StudiKasus/5.txt", false);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        System.out.println("X1 = i12");
+        System.out.println("X2 = i52");
+        System.out.println("X3 = i32");
+        System.out.println("X4 = i65");
+        System.out.println("X5 = i54");
+        System.out.println("X6 = i43");
+        System.out.println("X7 = v2");
+        System.out.println("X8 = v3");
+        System.out.println("X9 = v4");
+        System.out.println("X10 = v5");
+        System.out.println();
+        m.splGauss();
     }
 
     private static void solve6(){
