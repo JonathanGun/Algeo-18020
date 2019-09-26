@@ -218,10 +218,20 @@ public class Matrix{
     }
 
     // Setter
+    /**
+     * Untuk mengeset elemen di baris dan kolom tertentu
+     * 
+     * @param r baris
+     * @param c kolom
+     * @param x elemen yang ingin diset
+     */
     private void setElmt(int r, int c, BigDecimal x){
         this.tabInt[r][c] = x;
     }
 
+    /**
+     * Untuk mengset semua elemen pada matriks menjadi nol
+     */
     private void setZero(){
         for(int r = 1; r <= this.rows; r++){
             for(int c = 1; c <= this.cols; c++){
@@ -233,6 +243,9 @@ public class Matrix{
     // ============================================ Kelompok I/O ============================================ //
     // == INPUT == //
     // Matriks
+    /**
+     * Untuk menerima input elemen
+     */
     private void inputElements(){
         for(int r = 1; r <= this.rows; r++) {
             for(int c = 1; c <= this.cols; c++) {
@@ -241,6 +254,11 @@ public class Matrix{
         }
     }
 
+    /**
+     * 
+     * @param isSq mengecek apakah matriks yang dimasukkan adalah matriks bujur sangka
+     * Untuk memasukkan matriks 
+     */
     public void inputMatrix(boolean isSq){
         if (!this.isInterpolationMatrix && ((this.isSquareMatrix() && isSq) || !isSq) && this.rows != 0) {
             System.out.printf("Tersimpan matriks sebelumnya:\n");
@@ -281,6 +299,13 @@ public class Matrix{
     }
 
     // File
+    /**
+     * 
+     * @param fileName nama file yang ingin dimasukkan output-nya
+     * @param isSq mengecek apakah matriksnya berbentuk bujur sangkar
+     * @throws NotSquareMatrixException menandakan bahwa bukan matriks bujur sangkar
+     * @throws FileNotFoundException menandakan bahwa belum ada file dengan nama yang dimasukkan
+     */
     public void inputMatrixFromFile(String fileName, boolean isSq) throws NotSquareMatrixException, FileNotFoundException{
         File inputFile = new File("../test/" + fileName);
         try{
@@ -298,6 +323,12 @@ public class Matrix{
         input = new Scanner(System.in);
     }
 
+    /**
+     * 
+     * @param fileName nama file yang dimasukkan output-nya
+     * @throws NotInterpolationException menandakan bahwa bukan matriks interpolasi
+     * @throws FileNotFoundException menandakan bahwa tidak ditemukan file dengan nama tersebut
+     */
     public void inputInterpolationFromFile(String fileName) throws NotInterpolationException, FileNotFoundException{
         File inputFile = new File("../test/" + fileName);
         try{
@@ -317,6 +348,9 @@ public class Matrix{
     }
 
     // Interpolasi
+    /**
+     * Untuk menerima input titik interpolasi x dan y dan membentuk matriks interpolasi dari titik-titik tersebut
+     */
     private void inputInterpolationData(){
         for(int r = 1; r <= this.rows; r++){
             BigDecimal x = this.input.nextBigDecimal();
@@ -329,6 +363,9 @@ public class Matrix{
         }
     }
 
+    /**
+     * Untuk menerima input untuk operasi interpolasi dengan dua cara pula, yaitu melalui file atau melalui keyboard
+     */
     public void inputInterpolation(){
         if (this.isInterpolationMatrix && this.rows != 0){
             System.out.printf("Tersimpan data interpolasi sebelumnya:\n");
@@ -366,10 +403,16 @@ public class Matrix{
 
     // == OUTPUT == //
     // Matriks
+    /**
+     * Untuk menampilkan matriks ke layar, bersifat publik
+     */
     public void showMatrix(){
         this.print();
     }
 
+    /**
+     * Untuk menampilkan matriks ke layar, tetapi bersifat private
+     */
     private void print(){
         if (this.rows == 0) System.out.println("Matriks kosong!");
         for(int r = 1; r <= this.rows; r++) {
@@ -382,12 +425,19 @@ public class Matrix{
     }
 
     // Interpolasi
+    /**
+     * Untuk menampilkan data interpolasi ke layar
+     */
     private void printInterpolationData(){
         for(int r = 1; r <= this.rows; r++){
             System.out.printf("%.4f %.4f\n",this.getElmt(r, 2), this.getElmt(r, this.cols));
         }
     }
 
+    /**
+     * Untuk menampilkan solusi dari interpolasi berupa fungsi
+     * @param sol matriks solusi
+     */
     private void printSolutionInterpolation(Matrix sol) {
         System.out.print("f(x) = ");
         boolean firstNum = true;
@@ -410,6 +460,9 @@ public class Matrix{
     }
 
     // File
+    /**
+     * @return true jika user ingin memasukkan output ke dalam file
+     */
     public boolean outputFile() {
         System.out.print("Apakah hasil ini ingin disimpan ke dalam file? (0/1)\n");
         int save = this.input.nextInt();
@@ -431,12 +484,19 @@ public class Matrix{
     }
     
     // String
+    /**
+     * Untuk menampilkan solusi yang telah dihitung ke layar dalam bentuk string
+     */
     private void printSolutionString(){
         for(int i = 1; i <= this.cols-1; i++){
             System.out.println(this.solution[i]);
         }
     }
 
+    /**
+     * @param n 1 elemen yang ingin dipercantik
+     * @return string yang telah dipercantik
+     */
     private String prettify(BigDecimal n){
         String ans = "";
         if(n.compareTo(BigDecimal.ZERO) < 0) ans += "- ";
@@ -448,6 +508,10 @@ public class Matrix{
         return ans;
     }
 
+    /**
+     * Untuk memformat angka pertama yang dikeluarkan ke layar dalam baris tertentu
+     * @param S solusi dalam bentuk string
+     */
     private String formatAsFirstNum(String s){
         if(s.isEmpty() || s.equals("0")) return "0";
         if(s.substring(0,1).equals("+")) s = s.substring(2);
@@ -457,6 +521,11 @@ public class Matrix{
 
     // ================================= Elementary Row Operation ================================= //
     // Swap Row
+    /**
+     * Untuk menukar dua baris
+     * @param r1 baris pertama
+     * @param r2 baris kedua
+     */
     private void swapRow(int r1, int r2){
         this.scalar = this.scalar.negate();
         for(int c = 1; c <= this.cols; c++){
@@ -467,6 +536,11 @@ public class Matrix{
     }
 
     // Scale Row
+    /**
+     * Untuk mengalikan suatu elemen dengan suatu skalar
+     * @param r baris
+     * @param k skalar
+     */
     private void scaleRow(int r, BigDecimal k){
         if(k.compareTo(BigDecimal.ZERO) != 0)
             this.scalar = this.scalar.divide(k, precision, RoundingMode.CEILING);
@@ -476,6 +550,12 @@ public class Matrix{
     }
 
     // Add Row
+    /**
+     * Untuk menambah tiap elemen dari baris r1 dengan suatu kelipatan tiap elemen dari baris r2
+     * @param r1 baris
+     * @param r2 baris
+     * @param k suatu kelipatan
+     */
     private void addRow(int r1, int r2, BigDecimal k){
         for(int c = 1; c <= this.cols; c++){
             this.tabInt[r1][c] = this.tabInt[r1][c].add(k.multiply(this.getElmt(r2, c)));
@@ -484,10 +564,17 @@ public class Matrix{
     }
 
     // ============================== Kelompok Cek Properti Matriks =================================== //
+    /**
+     * @return Untuk mengecek apakah suatu matriks berbentuk bujur sangkar
+     */
     private boolean isSquareMatrix(){
         return (this.rows+1 == this.cols);
     }
 
+    /**
+     * @param r baris
+     * @return true jika suatu baris mengandung elemen yang semuanya nol
+     */
     private boolean isRowZero(int r) {
         int c = 1;
         while((c < this.cols) && (this.getElmt(r, c).compareTo(BigDecimal.ZERO) == 0)) {
@@ -496,6 +583,10 @@ public class Matrix{
         return (this.getElmt(r,this.cols).compareTo(BigDecimal.ZERO) == 0);
     }
 
+    /**
+     * @param r baris
+     * @return false jika seluruh elemen pada baris r memiliki nilai nol kecuali elemen terakhirnya, karena tidak mungkin x1+x2+...+xn = k jika semua x = 0
+     */
     private boolean isRowValid(int r){
         for(int c = 1; c < this.cols; c++){
             if (this.getElmt(r, c).compareTo(BigDecimal.ZERO) != 0) return true;
@@ -503,6 +594,9 @@ public class Matrix{
         return (this.getElmt(r, this.cols).compareTo(BigDecimal.ZERO) == 0);
     }
 
+    /**
+     * @return true jika matriks tersebut memiliki solusi dengan cara melakukan eliminasi Gauss lalu mengecek apakah seluruh barisnya valid
+     */
     private boolean hasSolution(){
         Matrix m = this.duplicateMatrix();
         m.gaussElim();
@@ -513,6 +607,10 @@ public class Matrix{
     }
 
     // ================================== Kelompok Manipulasi Matriks ===================================== //
+    /**
+     * 
+     * @return menyalin seluruh variabel sebuah matriks ke sebuah matriks baru
+     */
     private Matrix duplicateMatrix(){
         Matrix m = new Matrix(this.rows, this.cols);
         m.scalar = this.scalar;
@@ -527,6 +625,12 @@ public class Matrix{
         return m;
     }
 
+    /**
+     * 
+     * @param rx baris
+     * @param cx kolom
+     * @return mereduksi matriks pada baris dan kolom tertentu dengan cara mengambil elemen-elemen yang tidak berada pada baris dan kolom tersebut
+     */
     private Matrix reduce(int rx, int cx){
         Matrix m = this.duplicateMatrix();
         for(int r = 1; r <= this.rows; r++){
@@ -542,6 +646,10 @@ public class Matrix{
         return m;
     }
 
+    /**
+     * 
+     * @return matriks yang berisi transpose dari sebuah matriks
+     */
     private Matrix transpose(){
         Matrix m = this.duplicateMatrix();
         for(int r = 1; r <= m.rows; r++){
@@ -552,6 +660,9 @@ public class Matrix{
         return m;
     }
 
+    /**
+     * @return hasil kali matriks
+     */
     private Matrix multMatrix(Matrix m1, Matrix m2) {
         Matrix ans = new Matrix(m1.rows, m2.cols);
         ans.isInterpolationMatrix = false;
@@ -574,6 +685,9 @@ public class Matrix{
 
     // ====================================== 1. BAGIAN SPL ========================================== //
     // Gauss
+    /**
+     * Untuk menampilkan solusi persamaan linier dengan menggunakan metode eliminasi Gauss
+     */
     public void splGauss(){
         this.splGaussUtil();
         if(this.outputFile()){
@@ -582,6 +696,9 @@ public class Matrix{
         }
     }
 
+    /**
+     * Untuk melakukan perhitungan metode gauss dengan cara memanggil fungsi gaussElim()
+     */
     private void splGaussUtil(){
         System.out.println("Menggunakan metode eliminasi Gauss (EF):");
         Matrix ans = this.duplicateMatrix()
@@ -597,6 +714,9 @@ public class Matrix{
     }
 
     // Gauss-Jordan
+    /**
+     * Untuk menampilkan solusi persamaan linier dengan menggunakan metode eliminasi Gauss-Jordan 
+     */
     public void splGaussJordan(){
         this.splGaussJordanUtil();
         if(this.outputFile()){
@@ -605,6 +725,9 @@ public class Matrix{
         }
     }
 
+    /**
+     * Untuk melakukan perhitungan metode gauss dengan cara memanggil fungsi gaussJordanElim()
+     */
     private void splGaussJordanUtil(){
         System.out.println("Menggunakan metode eliminasi Gauss-Jordan (REF):");
         Matrix ans = this.duplicateMatrix()
@@ -620,6 +743,9 @@ public class Matrix{
     }
 
     // Invers
+    /**
+     * Untuk menampilkan solusi persamaan linier dengan menggunakan metode matriks balikan
+     */
     public void splInv(){
         this.splInvUtil();
         if(this.outputFile()){
@@ -628,6 +754,10 @@ public class Matrix{
         }
     }
 
+    /**
+     * Untuk menghasilkan solusi persamaan linier dengan menggunakan metode matriks balikan (invers) 
+     * dengan rumus matriks balikan dikali kolom terakhir dari matriks augmented
+     */
     private void splInvUtil() {
         // AX = B, maka X = A^-1 B
         // A: getCoeffMatrix, B: getLastCol
@@ -659,6 +789,9 @@ public class Matrix{
     }
 
     // Cramer
+    /**
+     * Untuk menampilkan solusi persamaan linier dengan menggunakan metode Cramer
+     */
     public void splCram(){
         this.splCramUtil();
         if(this.outputFile()){
@@ -667,6 +800,10 @@ public class Matrix{
         }
     }
 
+    /**
+     * Untuk menghasilkan solusi persamaan linier dengan menggunakan kaidah Cramer
+     * Caranya adalah dengan menukar kolom ke-i dengan kolom terakhir dari matriks augmented
+     */
     private void splCramUtil(){
         System.out.println("Menggunakan metode Kaidah Cramer (determinan):");
         // Tukar kolom i dengan kolom terakhir
@@ -698,6 +835,9 @@ public class Matrix{
 
     // ========================================= Kelompok Eliminasi SPL ======================================= //
     // Gauss
+    /**
+     * @return matriks yang telah dieliminasi menggunakan metode Gauss (dari atas ke bawah)
+     */
     private Matrix gaussElim(){
         Matrix m = this.duplicateMatrix();
         for (int pivot = 1; pivot <= m.rows; pivot++){
@@ -725,6 +865,9 @@ public class Matrix{
     }
 
     // Jordan
+    /**
+     * @return matriks yang telah dieliminasi menggunakan metode Jordan (dari bawah ke atas)
+     */
     private Matrix jordanElim(){
         Matrix m = this.duplicateMatrix();
         // sama seperti gaussElim(), tapi dari bawah ke atas
@@ -740,11 +883,17 @@ public class Matrix{
     }
 
     // Gauss Jordan
+    /**
+     * @return matriks yang telah dieliminasi menggunakan campuran fungsi gaussElim() dan jordanElim()
+     */
     private Matrix gaussJordanElim(){
         return this.gaussElim()
                    .jordanElim();
     }
 
+    /**
+     * Untuk mengubah matriks EF/REF menjadi string yang tertampil di layar
+     */
     private void getSPLSolution(){
         // prekondisi: this.hasSolution() == true;
         this.getFreeVar();
@@ -757,6 +906,10 @@ public class Matrix{
         ans.printSolutionString();
     }
 
+    /**
+     * 
+     * @return matriks berisi solusi
+     */
     private Matrix constructSolutionMatrix(){
         int r = 1;
         // cari row terbawah yang tidak 0 semua
@@ -782,6 +935,9 @@ public class Matrix{
         return m;
     }
 
+    /**
+     * Untuk mengubah solusi matriks menjadi string
+     */
     private void constructSolutionString(){
         for(int r = 1; r <= this.rows; r++){
             this.solution[r] = String.format("X%d = ", r);
@@ -823,6 +979,9 @@ public class Matrix{
     }
 
     // ================================== 2. BAGIAN INTERPOLASI ==================================== //
+    /**
+     * Untuk menampilkan hasil interpolasi dari titik-titik yang telah dimasukkan
+     */
     public void interpolate(){
         this.interpolateUtil();
         if(this.outputFile()){
@@ -831,6 +990,9 @@ public class Matrix{
         }
     }
 
+    /**
+     * Untuk menghasilkan fungsi yang merupakan hasil interpolasi dari titik-titik yang telah dimasukkan
+     */
     private void interpolateUtil(){
         Matrix ans = this.gaussJordanElim();
         ans.print();
@@ -852,6 +1014,11 @@ public class Matrix{
         System.out.println();
     }
 
+    /**
+     * 
+     * @param sol matriks solusi
+     * @return mengembalikan taksiran nilai fungsi (y) dari titik x yang dimasukkan.
+     */
     private BigDecimal estimateYInterpolation(Matrix sol) {
         BigDecimal x;
         BigDecimal minX = this.minXInterpolation();
@@ -881,6 +1048,9 @@ public class Matrix{
     // ================================== 3. BAGIAN MATRIKS NxN =================================== //
     // == INVERS == //
     // Gauss-Jordan
+    /**
+     * Untuk menghitung inverse dengan metode GaussJordan dan juga menanyakan apakah hasil inverse metode Gauss-Jordan ingin disimpan dan memasukkannya ke dalam file.
+     */
     public void invGaussJordan(){
         this.invGaussJordanUt();
         if(this.outputFile()){
@@ -889,6 +1059,9 @@ public class Matrix{
         }
     }
 
+    /**
+     * Untuk mencari inverse dengan metode Gauss-Jordan
+     */
     private void invGaussJordanUt(){
         System.out.println("Menggunakan metode eliminasi Gauss-Jordan (REF):");
         if (this.detGaussUtil().compareTo(BigDecimal.ZERO) == 0){
@@ -901,6 +1074,10 @@ public class Matrix{
         System.out.println();
     }
 
+    /**
+     * 
+     * @return matriks yang sudah dibalik atau diinvers menggunakan metode Gauss Jordan
+     */
     private Matrix invGaussJordanUtil(){
         // pakai OBE, ditempelin matriks identitas di sblh kanannya
         Matrix m = this.duplicateMatrix()
