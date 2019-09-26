@@ -76,8 +76,8 @@ root
   - [x] Bab 1 : deskripsi masalah
   - [x] Bab 2: Teori singkat mengenai metode eliminasi Gauss, metode eliminasi Gauss-Jordan, deteminan, matriks balikan, matriks kofaktor, matriks adjoin, kaidah Cramer, interpolasi polinom.
   - [x] Bab 3: Implementasi program dalam Java, meliputi struktur class yang didefinisikan (atribut dan method), garis besar program, dll.
-  - [ ] Bab 4: Eksperimen. Bab ini beris hasil eksekusi program terhadap contoh-contoh kasus yang diberikan berikut analisis hasil eksekusi tersebut
-  - [ ] Bab 5: Kesimpulan, saran, dan refleksi (hasil yang dicapai, saran pengembangan, dan refleksi anda terhadap tugas ini).
+  - [x] Bab 4: Eksperimen. Bab ini beris hasil eksekusi program terhadap contoh-contoh kasus yang diberikan berikut analisis hasil eksekusi tersebut
+  - [x] Bab 5: Kesimpulan, saran, dan refleksi (hasil yang dicapai, saran pengembangan, dan refleksi anda terhadap tugas ini).
   - [x] Referensi (buku, web), yang dipakai/diacu di dalam Daftar Referensi.
  
  ### Lainnya

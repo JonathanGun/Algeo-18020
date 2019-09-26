@@ -1,5 +1,6 @@
 import java.util.Scanner;
 
+// Driver Code untuk mengerjakan soal studi kasus
 public class StudiKasus {
 	static Scanner input = new Scanner(System.in);
     static Matrix m = new Matrix(0, 0);
