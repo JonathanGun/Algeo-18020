@@ -159,6 +159,7 @@ public class Matrix{
     }
 
     /**
+    * @param    r baris
     * @return   kolom terakhir dari sebuah matriks augmented
     */
     private Matrix getLastCol(){
@@ -169,6 +170,9 @@ public class Matrix{
         return m;
     }
 
+    /**
+    * @return   indeks pertama yang elemennya bukan 0
+    */
     private int idxNotZero(int r){
         for(int c = 1; c <= this.cols; c++){
             if(this.getElmt(r, c).compareTo(BigDecimal.ZERO) != 0) return c;
@@ -176,6 +180,9 @@ public class Matrix{
         return this.cols+1;
     }
 
+    /**
+     * @return digunakan untuk mengisi array of boolean bernama freeVar
+     */
     private void getFreeVar(){
         // set semua jadi true dulu
         for(int c = this.cols-1; c >= 1; c--) this.freeVar[c] = true;
@@ -186,6 +193,10 @@ public class Matrix{
         }
     }
 
+    /**
+     * 
+     * @return digunakan untuk mengembalikan nilai x maksimal dari titik interpolasi
+     */
     private BigDecimal maxXInterpolation() {
         BigDecimal max = this.getElmt(1,2);
         for(int r = 1; r <= this.rows; r++) {
@@ -194,6 +205,10 @@ public class Matrix{
         return max;
     }
 
+    /**
+     * 
+     * @return digunakan untuk mengembalikan nilai x minimum dari titik interpolasi
+     */
     private BigDecimal minXInterpolation() {
         BigDecimal min = this.getElmt(1,2);
         for(int r = 1; r <= this.rows; r++) {
