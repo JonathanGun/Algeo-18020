@@ -10,19 +10,78 @@ import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.text.DecimalFormat;
 
+/**
+* Class Matrix untuk menghitung solusi SPL, determinan, dan
+* operasi lain terhadap matriks
+*
+* @author   Jonathan Yudi Gunawan, Felicia Gojali, Florencia Wijaya
+* @version  1.0
+* @since    2019-09-26
+*/
 public class Matrix{
-    // Variables
+    /**
+    * array 2 dimensi bertipe BigDecimal untuk menyimpan elemen matriks
+    */
     private BigDecimal[][] tabInt;
-    private int rows, cols;
+
+    /**
+    * jumlah baris matriks
+    */
+    private int rows;
+
+    /**
+    * jumlah kolom matriks
+    */
+    private int cols;
+
+    /**
+    * konstanta pengali matriks
+    */
     private BigDecimal scalar;
+
+    /**
+    * apakah kolom ke-indeks_array merupakan free variable
+    */
     private boolean[] freeVar;
+
+    /**
+    * apakah matriks merupakan matriks interpolasi
+    */
     private boolean isInterpolationMatrix;
+
+    /**
+    * solusi yang sudah siap ditampilkan ke layar
+    */
     private String[] solution;
+
+    /**
+    * variabel untuk menerima input, baik dari keyboard ataupun dari file
+    */
     private Scanner input = new Scanner(System.in);
+
+    /**
+    * konstanta output dari keyboard, digunakan untuk mengembalikan output ke layar
+    */
     private final PrintStream stdout = System.out;
+
+    /**
+    * untuk menyimpan objek file untuk output
+    */
     private PrintStream fileout;
+
+    /**
+    * konstanta presisi program (jumlah angka penting)
+    */
     private final int precision = 100;
+
+    /**
+    * jumlah angka penting untuk perhitungan matematika
+    */
     private final MathContext mc = new MathContext(precision);
+
+    /**
+    * konstanta epsilon
+    */
     private final BigDecimal EPS = BigDecimal.valueOf(1e-40);
 
     // METHODS :
@@ -39,10 +98,22 @@ public class Matrix{
 
     // =========================================== Kelompok Primitif ========================================== //
     // Constructor
+    /**
+    * Konstruktor
+    *
+    * @param    r jumlah baris
+    * @param    c jumlah kolom
+    */
     public Matrix(int r, int c){
         this.reset(r, c);
     }
 
+    /**
+    * "Konstruktor"
+    *
+    * @param    r jumlah baris
+    * @param    c jumlah kolom
+    */
     private void reset(int r, int c){
         this.rows   = r;
         this.cols   = c;
@@ -53,16 +124,31 @@ public class Matrix{
     }
 
     // Selector / Getter
+    /**
+    * Untuk mendapat elemen matriks baris r kolom c
+    *
+    * @param    r jumlah baris
+    * @param    c jumlah kolom
+    * @return   elemen matriks baris r kolom c
+    */
     private BigDecimal getElmt(int r, int c){
         return this.tabInt[r][c];
     }
 
+    /**
+    * Konstruktor
+    *
+    * @return   matriks koefisien dari matriks augmentednya
+    */
     private Matrix getCoeffMatrix(){
         Matrix m = this.duplicateMatrix();
         m.cols--;
         return m;
     }
 
+    /**
+    * mendapat dimensi inputan sebuah file
+    */
     private void getDimension(){
         this.rows = 1;
         this.cols = this.input.nextLine().split(" ").length;
@@ -72,6 +158,9 @@ public class Matrix{
         }
     }
 
+    /**
+    * @return   kolom terakhir dari sebuah matriks augmented
+    */
     private Matrix getLastCol(){
         Matrix m = new Matrix(this.rows, 1);
         for(int r = 1; r <= this.rows; r++){
