@@ -935,6 +935,10 @@ public class Matrix{
     }
 
     // Cramer
+    /**
+     * prosedur digunakan untuk menghitung inverse dengan metode Cramer dan 
+     * menanyakan apakah hasil inverse metode Cramer ingin disimpan dan memasukkannya ke dalam file.
+     */
     public void invCram(){
         this.invCramUt();
         if(this.outputFile()){
@@ -942,6 +946,11 @@ public class Matrix{
             System.setOut(stdout);
         }
     }
+    /**
+     * prosedur mengecek terlebih dahulu apakah matriks yang dimasukkan memiliki determinan 
+     * yang tidak sama dengan nol, karena matriks dengan determinan nol tidak dapat dicari inverse-nya. 
+     * Apabila tidak, maka akan dilakukan proses inverse dengan memanfaatkan fungsi invCramUtil.
+     */
 
     private void invCramUt(){
         System.out.println("Menggunakan Metode Crammer");
@@ -952,7 +961,14 @@ public class Matrix{
             m.print();
         }
         System.out.println();
-    }
+    }   
+    /**
+     * fungsi mengembalikan sebuah matriks yang sudah dibalik atau di-inverse menggunakan metode kaidah Cramer, 
+     * yaitu dengan mencari matriks kofaktor dari matriks yang ditanya dan melakukan transpose agar 
+     * mendapatkan matriks adjoin-nya. Kemudian matriks adjoin akan dibagi oleh determinan dari 
+     * matriks itu sendiri dan akan mendapatkan matriks balikan atau matriks inverse dari matriks masukan.
+     * @return hasil matriks balikan dari matriks yang dimasukkan dengan metode crammer
+     */
 
     private Matrix invCramUtil(){
         // 1/det * adjoin
@@ -970,6 +986,10 @@ public class Matrix{
 
     // == DETERMINAN == //
     // Gauss
+    /**
+     * prosedur digunakan untuk menanyakan apakah hasil determinan metode Gauss 
+     * ingin disimpan dan memasukkannya ke dalam file.
+     */
     public void detGauss(){
         this.detGaussUt();
         if(this.outputFile()){
@@ -977,13 +997,21 @@ public class Matrix{
             System.setOut(stdout);
         }
     }
+    /**
+     * prosedur digunakan untuk “mempercantik” hasil dari operasi 
+     * determinan metode Gauss menggunakan fungsi prettify.
+     */
 
     private void detGaussUt(){
         System.out.println("Menggunakan metode eliminasi Gauss (EF):");
         System.out.println(formatAsFirstNum(prettify(this.detGaussUtil())));
         System.out.println();
     }
-
+    /**
+     * fungsi mengembalikan nilai dari operasi determinan menggunakan metode Gauss. 
+     * Jika diagonal utama dari matriks hasil eliminasi Gauss ada yang bernilai 0, maka determinan pastilah bernilai 0.
+     * @return nilai determinan yang dicari menggunakan metode Gauss
+     */
     private BigDecimal detGaussUtil(){
         Matrix m = this.duplicateMatrix()
                        .gaussElim();
@@ -994,6 +1022,10 @@ public class Matrix{
     }
 
     // Gauss Jordan
+    /**
+     * prosedur digunakan untuk menanyakan apakah 
+     * hasil determinan metode Gauss-Jordan ingin disimpan dan memasukkannya ke dalam file.
+     */
     public void detGaussJordan(){
         this.detGaussJordanUt();
         if(this.outputFile()){
@@ -1002,11 +1034,20 @@ public class Matrix{
         }
     }
 
+    /**
+     * prosedur digunakan untuk menampilkan dan “mempercantik” 
+     * hasil dari operasi determinan metode Gauss-Jordan menggunakan fungsi prettify.
+     */
     private void detGaussJordanUt(){
         System.out.println("Menggunakan metode eliminasi Gauss-Jordan (REF):");
         System.out.println(formatAsFirstNum(prettify(this.detGaussJordanUtil())));
         System.out.println();
     }
+    /**
+     * fungsi mengembalikan nilai dari operasi determinan menggunakan metode Gauss-Jordan. 
+     * Jika diagonal utama dari matriks hasil eliminasi Gauss ada yang bernilai 0, maka determinan pastilah bernilai 0.
+     * @return nilai determinan matriks yang dicari menggunakan metode Gauss-Jordan
+     */
 
     private BigDecimal detGaussJordanUtil(){
         Matrix m = this.duplicateMatrix()
@@ -1018,6 +1059,10 @@ public class Matrix{
     }
 
     // Cramer
+    /**
+     * prosedur digunakan untuk menanyakan apakah hasil determinan metode Cramer 
+     * ingin disimpan dan memasukkannya ke dalam file.
+     */
     public void detCram(){
         this.detCramUt();
         if(this.outputFile()){
@@ -1025,6 +1070,11 @@ public class Matrix{
             System.setOut(stdout);
         }
     }
+    /**
+     * prosedur digunakan untuk “mempercantik” hasil dari operasi determinan 
+     * metode Cramer menggunakan fungsi prettify.
+
+     */
 
     private void detCramUt(){
         System.out.println("Menggunakan Metode Cramer:");
@@ -1034,6 +1084,11 @@ public class Matrix{
         System.out.println(formatAsFirstNum(prettify(det)));
         System.out.println();
     }
+    /**
+     * fungsi mengembalikan sebuah nilai yaitu determinan matriks yang dicari dengan kaidah Cramer, 
+     * yaitu dengan menggunakan matriks kofaktor. Fungsi ini bersifat rekursif.
+     * @return angka determinan matriks dengan metode Crammer
+     */
 
     private BigDecimal detCramUtil(){
         // Basis
@@ -1050,6 +1105,9 @@ public class Matrix{
     }
 
     // == COFACTOR == //
+    /**
+     * prosedur digunakan untuk menanyakan apakah hasilnya ingin disimpan dan memasukkannya ke dalam file
+     */
     public void cofactor(){
         this.cofactorUt();
         if(this.outputFile()){
@@ -1057,6 +1115,9 @@ public class Matrix{
             System.setOut(stdout);
         }
     }
+    /**
+     * prosedur menampilkan matriks kofaktor dari matriks yang dimasukkan.
+     */
 
     private void cofactorUt(){
         this.getCoeffMatrix()
@@ -1064,7 +1125,15 @@ public class Matrix{
             .print();
         System.out.println();
     }
-
+    /**
+     * fungsi digunakan untuk mengembalikan matriks yang berisi kofaktor dari matriks yang dimasukkan.
+     * Pertama-tama , dibuat matriks bernama answ yang nantinya akan menampung hasil dari kofaktor.
+     * tetapi pertama kali diisi dengan matriks hasil input. Lalu dibuat lagi sebuah matriks bernama
+     * newm di dalam loop yang menampung minor baris dan kolom tertentu dari matriks hasil input. 
+     * Kemudian, determinan dari matriks newm  tersebut dikali dengan kofaktornya. 
+     * Akhirnya, matriks answ dimasukkan nilainya dengan hasil kali tersebut menggunakan setter
+     * @return matriks hasil kofaktor
+     */
     private Matrix cofactorUtil(){
         Matrix ans = this.duplicateMatrix();
 
@@ -1081,6 +1150,9 @@ public class Matrix{
     }
 
     // == ADJOIN == //
+    /**
+     * prosedur digunakan untuk menanyakan apaakah hasilnya ingin disimpan dan dimasukkan ke dalam file.
+     */
     public void adjoin(){
         this.adjoinUt();
         if(this.outputFile()){
@@ -1088,6 +1160,9 @@ public class Matrix{
             System.setOut(stdout);
         }
     }
+    /**
+     * prosedur untuk menampilkan matriks adjoin dari matriks yang dimasukkan.
+     */
 
     private void adjoinUt(){
         this.getCoeffMatrix()
@@ -1095,7 +1170,10 @@ public class Matrix{
             .print();
         System.out.println();
     }
-
+    /**
+     * fungsi digunakan untuk mengembalikan matriks yang berisi transpose dari matriks kofaktor.
+     * @return matriks adjoin
+     */
     private Matrix adjoinUtil(){
         // Cofactor transpose
         return this.duplicateMatrix()
@@ -1104,6 +1182,11 @@ public class Matrix{
     }
 
     // == Studi Kasus == //
+    /**
+     * fungsi digunakan untuk mengembalikan matriks Hilbert pada studi kasus dari nilai n(derajat) tertentu/
+     * @param n nilai yang akan diinput untuk mengisi matriks Hilbert
+     * @return matriks Hilbert yang sudah diisi tiap elemennya menurut n yang diinput
+     */
     public Matrix matriksHilbert(int n){
         Matrix m = new Matrix(n,n+1);
         for (int r = 1; r<= m.rows; r++){
@@ -1122,6 +1205,9 @@ public class Matrix{
         }
         return m;
     }
+    /**
+     * prosedur dibuat untuk interpolasi fungsi pada studi kasus.
+     */
 
     public void interpolasiDerajat(){
         System.out.print("Masukkan derajat polinom: ");
@@ -1141,15 +1227,34 @@ public class Matrix{
         m.interpolate();
         
     }
+    /**
+     * fungsi dibuat untuk mencari nilai fungsi(y) yang ada di studi kasus
+     * @param x nilai yang akan dimasukan ke dalam fungsi
+     * @return bigDecimal yang merupakan hasil perhitungan oleh x ke dalam fungsi
+     */
 
     private BigDecimal fungsi(BigDecimal x){
         return ((x.multiply(x)).add(x.sqrt(mc))).divide(BigDecimal.valueOf(Math.exp(x.doubleValue())).add(x), precision, RoundingMode.CEILING);
     }
+    /**
+     * fungsi digunakan untuk membulatkan desimal(BigDecimal) yang mendekati nol (atau bilangan bulat lain). 
+     * Pembulatan dilakukan cara, jika selisih BigDecimal dengan integer terdekatnya kurang dari suatu nilai
+     * tertentu, maka akan dibulatkan.
+     * @param x BigDecimal yang ingin dibulatkan mendekati nol 
+     * @return Big decimal yang sudah dibulatkan mendekati nol
+     */
 
     private BigDecimal myRound(BigDecimal x){
         if(x.subtract(BigDecimal.valueOf(x.intValue())).abs().compareTo(EPS) < 0) return BigDecimal.valueOf(x.intValue());
         return x;
     }
+    /**
+     * fungsi digunakan untuk pembulatan big decimal agar tidak semua angka di belakang koma ditampilkan. 
+     * Pembulatan ini dilakukan sebelum big decimal diubah menjadi string.
+     * @param x angka yang mau diubah menjadi string
+     * @param scale angka penting
+     * @return big decimal yang sudah diubah menjadi string
+     */
 
     private String format(BigDecimal x, int scale) {
         NumberFormat formatter = new DecimalFormat("0.0E0");
