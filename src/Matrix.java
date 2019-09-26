@@ -4,18 +4,26 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.FileWriter;
 import java.io.PrintStream;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+import java.text.NumberFormat;
+import java.text.DecimalFormat;
 
 public class Matrix{
     // Variables
-    private double[][] tabInt;
+    private BigDecimal[][] tabInt;
     private int rows, cols;
-    private double scalar;
+    private BigDecimal scalar;
     private boolean[] freeVar;
     private boolean isInterpolationMatrix;
     private String[] solution;
     private Scanner input = new Scanner(System.in);
-    private static PrintStream stdout = System.out;
+    private final PrintStream stdout = System.out;
     private PrintStream fileout;
+    private final int precision = 100;
+    private final MathContext mc = new MathContext(precision);
+    private final BigDecimal EPS = BigDecimal.valueOf(1e-40);
 
     // METHODS :
     // (27)  Kelompok primitif - constructor, selector/getter, setter
@@ -38,14 +46,14 @@ public class Matrix{
     private void reset(int r, int c){
         this.rows   = r;
         this.cols   = c;
-        this.scalar = 1;
-        this.tabInt = new double[this.rows+5][this.cols+5];
+        this.scalar = BigDecimal.ONE;
+        this.tabInt = new BigDecimal[this.rows+5][this.cols+5];
         this.freeVar  = new boolean[this.cols+5];
         this.solution = new String[this.cols+5];
     }
 
     // Selector / Getter
-    private double getElmt(int r, int c){
+    private BigDecimal getElmt(int r, int c){
         return this.tabInt[r][c];
     }
 
@@ -74,7 +82,7 @@ public class Matrix{
 
     private int idxNotZero(int r){
         for(int c = 1; c <= this.cols; c++){
-            if(this.getElmt(r, c) != 0) return c;
+            if(this.getElmt(r, c).compareTo(BigDecimal.ZERO) != 0) return c;
         }
         return this.cols+1;
     }
@@ -89,31 +97,31 @@ public class Matrix{
         }
     }
 
-    private double maxXInterpolation() {
-        double max = this.getElmt(1,2);
+    private BigDecimal maxXInterpolation() {
+        BigDecimal max = this.getElmt(1,2);
         for(int r = 1; r <= this.rows; r++) {
-            max = Math.max(max, getElmt(r, 2));
+            max = max.max(getElmt(r, 2));
         }
         return max;
     }
 
-    private double minXInterpolation() {
-        double min = this.getElmt(1,2);
+    private BigDecimal minXInterpolation() {
+        BigDecimal min = this.getElmt(1,2);
         for(int r = 1; r <= this.rows; r++) {
-            min = Math.min(min, getElmt(r, 2));
+            min = min.min(getElmt(r, 2));
         }
         return min;
     }
 
     // Setter
-    private void setElmt(int r, int c, double x){
+    private void setElmt(int r, int c, BigDecimal x){
         this.tabInt[r][c] = x;
     }
 
     private void setZero(){
         for(int r = 1; r <= this.rows; r++){
             for(int c = 1; c <= this.cols; c++){
-                this.setElmt(r, c, 0);
+                this.setElmt(r, c, BigDecimal.ZERO);
             }
         }
     }
@@ -124,7 +132,7 @@ public class Matrix{
     private void inputElements(){
         for(int r = 1; r <= this.rows; r++) {
             for(int c = 1; c <= this.cols; c++) {
-                this.setElmt(r, c, this.input.nextDouble());
+                this.setElmt(r, c, this.input.nextBigDecimal());
             }
         }
     }
@@ -194,7 +202,7 @@ public class Matrix{
             throw e;
         }
         this.getDimension();
-        if(this.cols != 2) throw new NotInterpolationException("Please input interpolation points \"<double><space><double>\"");
+        if(this.cols != 2) throw new NotInterpolationException("Please input interpolation points \"<BigDecimal><space><BigDecimal>\"");
         this.cols = this.rows+1;
         
         input = new Scanner(inputFile);
@@ -207,11 +215,11 @@ public class Matrix{
     // Interpolasi
     private void inputInterpolationData(){
         for(int r = 1; r <= this.rows; r++){
-            double x = this.input.nextDouble();
-            double y = this.input.nextDouble();
+            BigDecimal x = this.input.nextBigDecimal();
+            BigDecimal y = this.input.nextBigDecimal();
             // set koef baris dengan x^0, x^1, x^2, x^3, ..., y (matriks interpolasi)
             for(int c = 1; c <= this.cols; c++){
-                if (c != this.cols) this.setElmt(r, c, Math.pow(x, c-1));
+                if (c != this.cols) this.setElmt(r, c, x.pow(c-1));
                 else this.setElmt(r, c, y);
             }
         }
@@ -263,7 +271,7 @@ public class Matrix{
         for(int r = 1; r <= this.rows; r++) {
             System.out.printf("|");
             for(int c = 1; c <= this.cols; c++) {
-                System.out.printf("%.2f ", this.getElmt(r, c));
+                System.out.printf(format(this.getElmt(r, c), 2)+" ");
             }
             System.out.println("|");
         }
@@ -279,8 +287,8 @@ public class Matrix{
     private void printSolutionInterpolation(Matrix sol) {
         System.out.print("f(x) = ");
         boolean firstNum = true;
-        for(int i = 1; i <= this.cols; i++) {
-            if(sol.getElmt(i, 1) != 0) {
+        for(int i = 1; i <= this.cols-1; i++) {
+            if(sol.getElmt(i, 1).compareTo(BigDecimal.ZERO) != 0) {
                 String s = this.prettify(sol.getElmt(i, 1));
                 if(firstNum){
                     s = this.formatAsFirstNum(s);
@@ -325,48 +333,48 @@ public class Matrix{
         }
     }
 
-    private String prettify(double n){
+    private String prettify(BigDecimal n){
         String ans = "";
-        if(n < 0) ans += "- ";
-        else if (n > 0) ans += "+ ";
-        else return ans;
-        n = Math.abs(n);
+        if(n.compareTo(BigDecimal.ZERO) < 0) ans += "- ";
+        else if (n.compareTo(BigDecimal.ZERO) > 0) ans += "+ ";
+        else return "0";
+        n = n.abs();
 
-        if(Math.round(n) == this.myRound(n)) ans += Math.round(n);
-        else ans += String.format("%.4f", n);
+        ans += format(n, 2);
         return ans;
     }
 
     private String formatAsFirstNum(String s){
+        if(s.isEmpty() || s.equals("0")) return "0";
         if(s.substring(0,1).equals("+")) s = s.substring(2);
         else s = s.substring(0,1)+s.substring(2);
-        if(s.isEmpty()) s = "0";
         return s;
     }
 
     // ================================= Elementary Row Operation ================================= //
     // Swap Row
     private void swapRow(int r1, int r2){
-        this.scalar *= -1;
+        this.scalar = this.scalar.negate();
         for(int c = 1; c <= this.cols; c++){
-            double tmp = this.getElmt(r1, c);
+            BigDecimal tmp = this.getElmt(r1, c);
             this.setElmt(r1, c, this.getElmt(r2, c));
             this.setElmt(r2, c, tmp);
         }
     }
 
     // Scale Row
-    private void scaleRow(int r, double k){
-        this.scalar /= k;
+    private void scaleRow(int r, BigDecimal k){
+        if(k.compareTo(BigDecimal.ZERO) != 0)
+            this.scalar = this.scalar.divide(k, precision, RoundingMode.CEILING);
         for(int c = r; c <= this.cols; c++){
-            this.tabInt[r][c] *= k;
+            this.tabInt[r][c] = this.tabInt[r][c].multiply(k);
         }
     }
 
     // Add Row
-    private void addRow(int r1, int r2, double k){
+    private void addRow(int r1, int r2, BigDecimal k){
         for(int c = 1; c <= this.cols; c++){
-            this.tabInt[r1][c] += k*this.getElmt(r2, c);
+            this.tabInt[r1][c] = this.tabInt[r1][c].add(k.multiply(this.getElmt(r2, c)));
             this.tabInt[r1][c] = this.myRound(this.tabInt[r1][c]);
         }
     }
@@ -378,17 +386,17 @@ public class Matrix{
 
     private boolean isRowZero(int r) {
         int c = 1;
-        while((c<this.cols) && (this.getElmt(r, c) == 0)) {
+        while((c < this.cols) && (this.getElmt(r, c).compareTo(BigDecimal.ZERO) == 0)) {
             c += 1;
         }
-        return (this.getElmt(r,this.cols) == 0);
+        return (this.getElmt(r,this.cols).compareTo(BigDecimal.ZERO) == 0);
     }
 
     private boolean isRowValid(int r){
         for(int c = 1; c < this.cols; c++){
-            if (this.getElmt(r, c) != 0) return true;
+            if (this.getElmt(r, c).compareTo(BigDecimal.ZERO) != 0) return true;
         }
-        return (this.getElmt(r, this.cols) == 0);
+        return (this.getElmt(r, this.cols).compareTo(BigDecimal.ZERO) == 0);
     }
 
     private boolean hasSolution(){
@@ -449,11 +457,11 @@ public class Matrix{
         } else {
             for(int r1 = 1; r1 <= m1.rows; r1++ ) {
                 for(int c2 = 1; c2 <= m2.cols; c2++ ) {
-                    ans.setElmt(r1, c2, 0);
+                    ans.setElmt(r1, c2, BigDecimal.ZERO);
                     for(int r2 = 1; r2 <= m2.rows; r2++) {
-                        ans.tabInt[r1][c2] += m1.getElmt(r1, r2) * m2.getElmt(r2, c2);
+                        ans.tabInt[r1][c2] = ans.tabInt[r1][c2].add(m1.getElmt(r1, r2).multiply(m2.getElmt(r2, c2)));
                     }
-                    ans.tabInt[r1][c2] = ans.myRound(ans.tabInt[r1][c2]);
+                    ans.tabInt[r1][c2] = this.myRound(ans.tabInt[r1][c2]);
                 }
             }
         }
@@ -521,7 +529,7 @@ public class Matrix{
         // A: getCoeffMatrix, B: getLastCol
         System.out.println("Menggunakan metode Matriks Balikan (invers):");
         if(this.isSquareMatrix()) {
-            if(this.detGaussUtil() == 0){
+            if(this.detGaussUtil().compareTo(BigDecimal.ZERO) == 0){
                 System.out.println("Matriks ini determinannya 0, tidak bisa ditentukan dengan metode Invers");
                 System.out.println("Silakan mencoba metode lain");
             } else {
@@ -560,8 +568,8 @@ public class Matrix{
         // Tukar kolom i dengan kolom terakhir
         if(this.isSquareMatrix()) {
             if (this.hasSolution()) {
-                double denom = this.detGaussUtil();
-                if (denom == 0) {
+                BigDecimal denom = this.detGaussUtil();
+                if (denom.compareTo(BigDecimal.ZERO) == 0) {
                     System.out.println("Matriks ini determinannya 0, tidak bisa ditentukan dengan metode Crammer");
                     System.out.println("Silakan mencoba metode lain");
                 } else {
@@ -571,7 +579,7 @@ public class Matrix{
                         for (int r = 1 ; r <= this.rows ; r++) {
                             ans.setElmt(r, c, a.getElmt(r, 1));
                         }
-                        String s = formatAsFirstNum(prettify(ans.detGaussUtil() / denom));
+                        String s = formatAsFirstNum(prettify(ans.detGaussUtil().divide(denom, precision, RoundingMode.CEILING)));
                         this.solution[c] = String.format("X%d = ", c) + s;
                     }
                     this.printSolutionString();
@@ -601,14 +609,14 @@ public class Matrix{
             // kurangi semua baris di bawah pivot dengan k*baris pivot, sehingga
             // angka di bawah pivot jadi 0 semua
             for(int r = pivot + 1; r <= m.rows; r++){
-                double k = m.getElmt(r, c)/m.getElmt(pivot, c);
-                if (k != 0) m.addRow(r, pivot, -k);
+                BigDecimal k = m.getElmt(r, c).divide(m.getElmt(pivot, c), precision, RoundingMode.CEILING);
+                if (k.compareTo(BigDecimal.ZERO) != 0) m.addRow(r, pivot, k.negate());
             }
 
             // ubah elmt ke-pivot menjadi 1, agar menjadi echelon form
-            m.scaleRow(pivot, 1 / m.getElmt(pivot, c));
+            m.scaleRow(pivot, BigDecimal.ONE.divide(m.getElmt(pivot, c), precision, RoundingMode.CEILING));
         }
-        m.scalar *= this.scalar;
+        m.scalar = m.scalar.multiply(this.scalar);
         return m;
     }
 
@@ -620,8 +628,8 @@ public class Matrix{
             int c = m.idxNotZero(pivot);
             if(c == m.cols+1) continue;
             for(int r = pivot-1; r >= 1; r--){
-                double k = m.getElmt(r, c) / m.getElmt(pivot, c);
-                if (k != 0) m.addRow(r, pivot, -k);
+                BigDecimal k = m.getElmt(r, c).divide(m.getElmt(pivot, c), precision, RoundingMode.CEILING);
+                if (k.compareTo(BigDecimal.ZERO) != 0) m.addRow(r, pivot, k.negate());
             }
         }
         return m;
@@ -660,11 +668,11 @@ public class Matrix{
                 m.setElmt(cc, this.cols, this.getElmt(r, this.cols));
                 // jumlahkan semua
                 for(int c = this.cols-1; c > cc; c--){
-                    m.addRow(cc, c, -this.getElmt(r, c));
+                    m.addRow(cc, c, this.getElmt(r, c).negate());
                 }
                 r--;
             } else {
-                m.setElmt(cc, cc, 1);
+                m.setElmt(cc, cc, BigDecimal.ONE);
             }
         }
         return m;
@@ -676,7 +684,7 @@ public class Matrix{
             boolean firstNum = true;
             for(int c = this.cols; c >= 1; c--){
                 String s = prettify(this.getElmt(r, c));
-                if(s.isEmpty()) continue; // kalau 0 langsung skip
+                if(s.equals("0")) continue; // kalau 0 langsung skip
 
                 // angka
                 String num = s.substring(2);
@@ -690,7 +698,7 @@ public class Matrix{
                     else s = sign+num;
 
                     // tidak perlu tulis angka 1 krn ada hurufnya (meskipun angka pertama)
-                    if(c != this.cols && this.getElmt(r, c) != 0){
+                    if(c != this.cols && (this.getElmt(r, c).compareTo(BigDecimal.ZERO) != 0)){
                         if(sign.equals("+")) s = "";
                         else s = sign;
                     }
@@ -698,7 +706,7 @@ public class Matrix{
                 }
 
                 // huruf
-                if(c != this.cols && this.getElmt(r, c) != 0){
+                if(c != this.cols && (this.getElmt(r, c).compareTo(BigDecimal.ZERO) != 0)){
                     s += String.format("%c ", 'a'+(this.cols-c-1));
                 }
                 else s += " ";
@@ -721,6 +729,7 @@ public class Matrix{
 
     private void interpolateUtil(){
         Matrix ans = this.gaussJordanElim();
+        ans.print();
         // Kasus input beberapa titik sama, jadikan 1 titik saja
         for(int r = 1; r <= ans.rows; r++) {
             if(ans.isRowZero(r)) {
@@ -739,23 +748,23 @@ public class Matrix{
         System.out.println();
     }
 
-    private double estimateYInterpolation(Matrix sol) {
-        double x;
-        double minX = this.minXInterpolation();
-        double maxX = this.maxXInterpolation();
+    private BigDecimal estimateYInterpolation(Matrix sol) {
+        BigDecimal x;
+        BigDecimal minX = this.minXInterpolation();
+        BigDecimal maxX = this.maxXInterpolation();
         do{
             System.setOut(stdout);
             System.out.print("Masukkan nilai x antara " + minX + " dan " + maxX + " untuk ditaksir nilai y-nya: ");
-            x = this.input.nextDouble();
-            if((x < minX) || (x > maxX)) {
+            x = this.input.nextBigDecimal();
+            if((x.compareTo(minX) < 0) || (x.compareTo(maxX) > 0)) {
                 System.out.println("Titik tidak di dalam range. Silakan ulangi.");
                 System.out.println();
             }
-        } while((x < minX) || (x > maxX));
+        } while((x.compareTo(minX) < 0) || (x.compareTo(maxX) > 0));
 
-        double hasil = 0;
-        for(int c = 1; c <= this.cols; c++) {
-            hasil += sol.getElmt(c, 1) * (Math.pow(x, c-1));
+        BigDecimal hasil = BigDecimal.ZERO;
+        for(int c = 1; c <= this.cols-1; c++) {
+            hasil = hasil.add(sol.getElmt(c, 1).multiply((x.pow(c-1))));
         }
         if(fileout != null) {
             System.setOut(fileout);
@@ -778,7 +787,7 @@ public class Matrix{
 
     private void invGaussJordanUt(){
         System.out.println("Menggunakan metode eliminasi Gauss-Jordan (REF):");
-        if (this.detGaussUtil() == 0){
+        if (this.detGaussUtil().compareTo(BigDecimal.ZERO) == 0){
             System.out.println("Tidak bisa dicari matriks invers! Determinannya 0!");
         } else {
             this.duplicateMatrix()
@@ -804,8 +813,8 @@ public class Matrix{
         // copy matriks identitas di sblh kanannya
         for(int r = 1; r <= anstemp.rows; r++) {
             for(int c = (anstemp.cols/2) + 1; c <= anstemp.cols; c++) {
-                if(r + (anstemp.cols/2) == c) anstemp.setElmt(r, c, 1);
-                else anstemp.setElmt(r, c, 0);
+                if(r + (anstemp.cols/2) == c) anstemp.setElmt(r, c, BigDecimal.ONE);
+                else anstemp.setElmt(r, c, BigDecimal.ZERO);
             }
         }
         anstemp = anstemp.gaussJordanElim();
@@ -814,7 +823,7 @@ public class Matrix{
         Matrix ans = new Matrix(m.rows, m.cols);
         for(int r = 1; r <= ans.rows; r++) {
             for(int c = 1; c <= ans.cols; c++) {
-                double a = anstemp.getElmt(r, c + (anstemp.cols/2));
+                BigDecimal a = anstemp.getElmt(r, c + (anstemp.cols/2));
                 ans.setElmt(r, c, a);
             }
         }
@@ -832,12 +841,11 @@ public class Matrix{
 
     private void invCramUt(){
         System.out.println("Menggunakan Metode Crammer");
-        if (this.detGaussUtil() == 0){
+        if (this.detGaussUtil().compareTo(BigDecimal.ZERO) == 0){
             System.out.println("Tidak bisa dicari matriks invers! Determinannya 0!");
         } else {
             Matrix m = this.duplicateMatrix().invCramUtil();
-            if (m.getElmt(1,1) == Double.NaN) System.out.println("Tidak bisa dicari matriks invers! Determinannya 0!");
-            else m.print();
+            m.print();
         }
         System.out.println();
     }
@@ -845,16 +853,12 @@ public class Matrix{
     private Matrix invCramUtil(){
         // 1/det * adjoin
         Matrix ans = this.duplicateMatrix().getCoeffMatrix();
-        double x = ans.detCramUtil();
-        if (x == 0){
-            ans.setElmt(1, 1, Double.NaN);
-            return ans;
-        }
+        BigDecimal x = ans.detCramUtil();
 
         ans = ans.adjoinUtil();
         for(int r = 1; r <= this.rows; r++) {
             for(int c = 1; c <= this.cols; c++) {
-                ans.tabInt[r][c] /= x;
+                ans.tabInt[r][c] = ans.tabInt[r][c].divide(x, precision, RoundingMode.CEILING);
             }
         }
         return ans;
@@ -876,11 +880,11 @@ public class Matrix{
         System.out.println();
     }
 
-    private double detGaussUtil(){
+    private BigDecimal detGaussUtil(){
         Matrix m = this.duplicateMatrix()
                        .gaussElim();
         for(int r = 1; r <= m.rows; r++){
-            if (m.getElmt(r, r) == 0) return 0;
+            if (m.getElmt(r, r).compareTo(BigDecimal.ZERO) == 0) return BigDecimal.ZERO;
         }
         return m.scalar;
     }
@@ -900,11 +904,11 @@ public class Matrix{
         System.out.println();
     }
 
-    private double detGaussJordanUtil(){
+    private BigDecimal detGaussJordanUtil(){
         Matrix m = this.duplicateMatrix()
                        .gaussJordanElim();
         for(int r = 1; r <= m.rows; r++){
-            if (m.getElmt(r, r) == 0) return 0;
+            if (m.getElmt(r, r).compareTo(BigDecimal.ZERO) == 0) return BigDecimal.ZERO;
         }
         return m.scalar;
     }
@@ -920,23 +924,23 @@ public class Matrix{
 
     private void detCramUt(){
         System.out.println("Menggunakan Metode Cramer:");
-        double det = this.duplicateMatrix()
+        BigDecimal det = this.duplicateMatrix()
                          .getCoeffMatrix()
                          .detCramUtil();
         System.out.println(formatAsFirstNum(prettify(det)));
         System.out.println();
     }
 
-    private double detCramUtil(){
+    private BigDecimal detCramUtil(){
         // Basis
-        if (this.rows == 0) return 1;
+        if (this.rows == 0) return BigDecimal.ONE;
         
         // Rekursi
-        double ans = 0;
+        BigDecimal ans = BigDecimal.ZERO;
         for(int c = 1; c <= this.cols; c++){
             Matrix tmp = this.duplicateMatrix()
                              .reduce(1, c);
-            ans += this.getElmt(1, c) * tmp.detCramUtil() * Math.pow(-1,c+1);
+            ans = ans.add(this.getElmt(1, c).multiply(tmp.detCramUtil()).multiply(BigDecimal.valueOf(-1).pow(c+1)));
         }
         return ans;
     }
@@ -965,7 +969,7 @@ public class Matrix{
             for(int c = 1; c <= ans.cols; c++){
                 newm = this.duplicateMatrix();
                 newm = newm.reduce(r, c);
-                double det = newm.detCramUtil() * Math.pow(-1, r+c);
+                BigDecimal det = newm.detCramUtil().multiply(BigDecimal.valueOf(-1).pow(r+c));
                 ans.setElmt(r, c, det);
             }
         }
@@ -1002,13 +1006,13 @@ public class Matrix{
             for(int c = 1; c<= m.cols; c++){
                 if (c == m.cols) {
                     if (r == 1) {
-                        m.setElmt(r, c, 1);
+                        m.setElmt(r, c, BigDecimal.ONE);
                     } else {
-                        m.setElmt(r, c, 0);
+                        m.setElmt(r, c, BigDecimal.ZERO);
                     }
                 } else {
-                    double x = (r+c-1);
-                    m.setElmt(r, c, 1/x);  
+                    BigDecimal x = BigDecimal.valueOf(r+c-1);
+                    m.setElmt(r, c, BigDecimal.ONE.divide(x, precision, RoundingMode.CEILING));  
                 }
             }
         }
@@ -1019,27 +1023,34 @@ public class Matrix{
         System.out.print("Masukkan derajat polinom: ");
         int n = this.input.nextInt();
         Matrix m = new Matrix(n+1, n+2);
-        double h = 2.0/n;
-        double x = 0;
+        BigDecimal h = BigDecimal.valueOf(2.0).divide(BigDecimal.valueOf(n), precision, RoundingMode.CEILING);
+        BigDecimal x = BigDecimal.ZERO;
 
         for (int r = 1; r<= m.rows; r++){
-            double y = fungsi(x);
+            BigDecimal y = fungsi(x);
             for(int c = 1; c <= m.cols; c++){
-                if (c != m.cols) m.setElmt(r, c, Math.pow(x, c-1));
+                if (c != m.cols) m.setElmt(r, c, x.pow(c-1));
                 else m.setElmt(r, c, y);
             }
-            x += h;
+            x = x.add(h);
         }
         m.interpolate();
         
     }
 
-    private double fungsi(double x){
-        return ((x*x + Math.sqrt(x)) / (Math.exp(x) + x));
+    private BigDecimal fungsi(BigDecimal x){
+        return ((x.multiply(x)).add(x.sqrt(mc))).divide(BigDecimal.valueOf(Math.exp(x.doubleValue())).add(x), precision, RoundingMode.CEILING);
     }
 
-    private double myRound(double x){
-        if(Math.abs(x - Math.round(x)) < (1e-13)) return Math.round(x);
+    private BigDecimal myRound(BigDecimal x){
+        if(x.subtract(BigDecimal.valueOf(x.intValue())).abs().compareTo(EPS) < 0) return BigDecimal.valueOf(x.intValue());
         return x;
+    }
+
+    private String format(BigDecimal x, int scale) {
+        NumberFormat formatter = new DecimalFormat("0.0E0");
+        formatter.setRoundingMode(RoundingMode.HALF_UP);
+        formatter.setMinimumFractionDigits(scale);
+        return formatter.format(x);
     }
 }
