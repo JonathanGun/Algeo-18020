@@ -785,12 +785,6 @@ public class Matrix{
                 if(firstNum) {
                     if(sign.equals("+")) s = num;
                     else s = sign+num;
-
-                    // tidak perlu tulis angka 1 krn ada hurufnya (meskipun angka pertama)
-                    if(c != this.cols && (this.getElmt(r, c).compareTo(BigDecimal.ZERO) != 0)){
-                        if(sign.equals("+")) s = "";
-                        else s = sign;
-                    }
                     firstNum = false;
                 }
 

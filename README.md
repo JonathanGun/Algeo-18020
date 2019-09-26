@@ -22,7 +22,7 @@ root
  |   ├─    ...
  |   └─ internosol.txt
  └─ doc
-     ├─ laporan.docx
+     ├─ index.html
      └─ README.md
 ```
 

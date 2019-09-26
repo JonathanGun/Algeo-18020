@@ -82,7 +82,7 @@ public class StudiKasus {
         } catch (Exception e){
             e.printStackTrace();
         }
-        m.splGauss();
+        m.splGaussJordan();
     }
 
     private static void solve3(char x){
